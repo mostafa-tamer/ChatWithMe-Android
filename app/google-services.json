@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "136228589593",
+    "firebase_url": "https://chat-with-me-f3093-default-rtdb.firebaseio.com",
+    "project_id": "chat-with-me-f3093",
+    "storage_bucket": "chat-with-me-f3093.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136228589593:android:cac7b0961820b924811a88",
+        "android_client_info": {
+          "package_name": "com.mostafatamer.chatwithme"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAH-Y0H-4PEyTUn9F598tjNoZEXhSwJKkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
