@@ -13,7 +13,8 @@ class StompClientSingleton {
             token?.let { headerMap["Authorization"] = it }
             return Stomp.over(
                 Stomp.ConnectionProvider.OKHTTP,
-                "ws://192.168.1.14:9090/gs-guide-websocket",
+                "ws://192.168.1.7:9090/gs-guide-websocket",
+//                "wss://chatwithme-sshl.onrender.com/gs-guide-websocket",
 //                "ws://10.1.11.156:9090/gs-guide-websocket",
                 headerMap,
             )

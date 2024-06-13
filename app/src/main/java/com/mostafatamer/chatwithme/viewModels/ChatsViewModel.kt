@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.enumeration.WebSocketPaths
-import com.mostafatamer.chatwithme.helper.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
 import com.mostafatamer.chatwithme.network.entity.dto.ChatLastMessageNumberDto
 import com.mostafatamer.chatwithme.network.entity.dto.MessageDto
@@ -18,6 +17,7 @@ import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
 import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.static.AppUser
 import com.mostafatamer.chatwithme.static.JsonConverter
+import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.viewModels.abstract.StompConnection
 import kotlinx.coroutines.launch
 
@@ -26,6 +26,7 @@ class ChatsViewModel(
     private val friendshipRepository: FriendshipRepository,
     private val stompService: StompService,
     private val chatSharedPreferences: SharedPreferencesHelper,
+    private val loginSharedPreferences: SharedPreferencesHelper,
 ) : ViewModel(), StompConnection {
     //chat tag -> lastMessageNumber to missingMessages
     private val lastReadMessagesMap = mutableMapOf<String, Pair<Long, Long>>()
@@ -140,8 +141,8 @@ class ChatsViewModel(
                     chats.clear()
                     lastReadMessagesMap.clear()
 
-                    chatResponse.forEach {
-                        chats.add(ChatWithMissingMessages(it))
+                    chatResponse.forEach {chat->
+                        repeat(20){ chats.add(ChatWithMissingMessages(chat)) }
                     }
 
                     observeChatsLastMessage()
@@ -217,6 +218,12 @@ class ChatsViewModel(
                 checkLastReadMessageAndUpdateMissingMessages(lastMessageNumber, index)
             }
         }.execute()
+    }
+
+    fun clearUserDataForAutomaticLogin() {
+        loginSharedPreferences.setValue(SharedPreferences.Login.USER_TOKEN, null)
+        loginSharedPreferences.setValue(SharedPreferences.Login.USER, null)
+        loginSharedPreferences.setValue(SharedPreferences.Login.USER_TOKEN_TIME, null)
     }
 
     data class ChatWithMissingMessages(

@@ -73,8 +73,7 @@ class MainActivity : ComponentActivity() {
             ChatWithMeTheme {
 
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize()
                 ) {
 
 //                    Indomi(stompClient = stompClient())

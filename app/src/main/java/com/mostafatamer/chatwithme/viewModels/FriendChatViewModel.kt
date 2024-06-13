@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
-import com.mostafatamer.chatwithme.helper.SharedPreferencesHelper
+import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.enumeration.WebSocketPaths
 import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
 import com.mostafatamer.chatwithme.network.entity.dto.MessageDto

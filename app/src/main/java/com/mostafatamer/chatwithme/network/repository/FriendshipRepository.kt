@@ -2,6 +2,8 @@ package com.mostafatamer.chatwithme.network.repository
 
 import com.mostafatamer.chatwithme.network.entity.dto.SendFriendRequestDto
 import com.mostafatamer.chatwithme.network.api.FriendshipApiService
+import com.mostafatamer.chatwithme.network.entity.ApiResponse
+import com.mostafatamer.chatwithme.network.entity.dto.UserDto
 import com.mostafatamer.chatwithme.utils.CallDecorator
 import retrofit2.Retrofit
 
@@ -15,7 +17,7 @@ class FriendshipRepository(retrofit: Retrofit) {
 
     fun allFriends() = CallDecorator(apiService.allFriends())
 
-    fun acceptFriendRequest(senderUsername: String) =
+    fun acceptFriendRequest(senderUsername: String): CallDecorator<ApiResponse<UserDto>> =
         CallDecorator(apiService.acceptFriendRequest(senderUsername))
 
     fun sendFriendRequest(sendFriendRequestDto: SendFriendRequestDto)  =

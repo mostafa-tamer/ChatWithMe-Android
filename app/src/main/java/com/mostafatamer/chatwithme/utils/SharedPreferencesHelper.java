@@ -1,4 +1,4 @@
-package com.mostafatamer.chatwithme.helper;
+package com.mostafatamer.chatwithme.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

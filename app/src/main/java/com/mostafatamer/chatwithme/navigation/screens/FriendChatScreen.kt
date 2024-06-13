@@ -13,7 +13,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.mostafatamer.chatwithme.enumeration.Screens
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
-import com.mostafatamer.chatwithme.helper.SharedPreferencesHelper
+import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.navigation.helper.StompConnection
 import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
@@ -70,7 +70,10 @@ private fun getViewModel(
                 StompService(
                     StompClientSingleton.createInstance()
                 ),
-                SharedPreferencesHelper(context, SharedPreferences.FriendChat.name),
+                SharedPreferencesHelper(
+                    context,
+                    SharedPreferences.FriendChat.name
+                ),
                 chat
             )
         )

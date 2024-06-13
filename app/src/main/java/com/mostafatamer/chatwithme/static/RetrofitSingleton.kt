@@ -23,7 +23,8 @@ class RetrofitSingleton private constructor() {
 
                 retrofit = Retrofit.Builder()
                     .baseUrl(
-                        "http://192.168.1.14:9090"
+                        "http://192.168.1.7:9090"
+//                        "https://chatwithme-sshl.onrender.com"
 //                        "http://10.1.11.156:9090"
                     )
                     .addConverterFactory(

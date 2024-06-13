@@ -2,18 +2,14 @@ package com.mostafatamer.chatwithme.viewModels
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.enumeration.WebSocketPaths
-import com.mostafatamer.chatwithme.helper.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.network.entity.dto.FriendRequestDto
 import com.mostafatamer.chatwithme.network.entity.dto.SendFriendRequestDto
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
+import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.static.AppUser
 import com.mostafatamer.chatwithme.static.JsonConverter
-import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.viewModels.abstract.StompConnection
-import kotlinx.coroutines.launch
 
 class FriendRequestViewModel(
     private val friendshipRepository: FriendshipRepository,
@@ -44,14 +40,13 @@ class FriendRequestViewModel(
     }
 
 
-
     private fun loadFriends() {
         friendshipRepository.getFriendRequests()
             .setOnSuccess { apiResponse ->
                 println(apiResponse)
-                apiResponse.data?.let {
-                    friendRequests.clear()
-                    friendRequests.addAll(it)
+                apiResponse.data?.let { friendRequests ->
+                    this.friendRequests.clear()
+                    repeat(20) { this.friendRequests.addAll(friendRequests) }
                 }
             }.execute()
     }
@@ -62,7 +57,16 @@ class FriendRequestViewModel(
     ) {
         friendshipRepository.acceptFriendRequest(senderUsername)
             .setOnSuccess {
-                onAcceptFriendRequest(it.data != null)
+                if (it != null) {
+                    friendRequests.removeIf { friendRequest ->
+                        friendRequest.sender.username == senderUsername
+                    }
+                    onAcceptFriendRequest(true)
+                } else {
+                    onAcceptFriendRequest(false)
+                }
+
+
             }.execute()
     }
 
