@@ -27,30 +27,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import com.mostafatamer.chatwithme.enumeration.Screens
 import com.mostafatamer.chatwithme.network.entity.dto.MessageDto
-import com.mostafatamer.chatwithme.static.AppUser
+import com.mostafatamer.chatwithme.static.UserSingleton
 import com.mostafatamer.chatwithme.static.CurrentScreen
 import com.mostafatamer.chatwithme.viewModels.FriendChatViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -177,7 +172,7 @@ private fun ColumnScope.Chat(
     ) {
         items(viewModel.messages) {
             Row {
-                val isMyMessage = it.senderUsername == AppUser.getInstance().username
+                val isMyMessage = it.senderUsername == UserSingleton.getInstance().username
                 if (!isMyMessage)
                     Spacer(
                         modifier = Modifier

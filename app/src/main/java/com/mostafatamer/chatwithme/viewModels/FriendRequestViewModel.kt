@@ -7,23 +7,20 @@ import com.mostafatamer.chatwithme.network.entity.dto.FriendRequestDto
 import com.mostafatamer.chatwithme.network.entity.dto.SendFriendRequestDto
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.AppUser
+import com.mostafatamer.chatwithme.static.UserSingleton
 import com.mostafatamer.chatwithme.static.JsonConverter
-import com.mostafatamer.chatwithme.viewModels.abstract.StompConnection
 
 class FriendRequestViewModel(
     private val friendshipRepository: FriendshipRepository,
     private val stompService: StompService,
-) : ViewModel(), StompConnection {
+) : ViewModel()  {
     val friendRequests = mutableStateListOf<FriendRequestDto>()
 
-    init {
-        ensureStompConnected()
-    }
+
 
     fun observeFriendRequestsAndLoadFriends() {
         val topic =
-            "${WebSocketPaths.SendFriendRequestMessageBroker.path}/${AppUser.getInstance().username}"
+            "${WebSocketPaths.SendFriendRequestMessageBroker.path}/${UserSingleton.getInstance().username}"
         stompService.topicListener(
             topic, onSubscribe = {
                 loadFriends()
@@ -88,11 +85,5 @@ class FriendRequestViewModel(
     }
 
 
-    override fun ensureStompConnected() {
-        ensureStompConnected(stompService)
-    }
 
-    override fun cleanUp() {
-        cleanUp(stompService)
-    }
 }

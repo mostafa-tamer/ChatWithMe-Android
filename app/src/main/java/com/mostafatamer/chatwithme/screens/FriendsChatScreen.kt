@@ -16,8 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.mostafatamer.chatwithme.R
 import com.mostafatamer.chatwithme.navigation.ScreensRouts
-import com.mostafatamer.chatwithme.static.AppUser
+import com.mostafatamer.chatwithme.static.UserSingleton
 import com.mostafatamer.chatwithme.viewModels.ChatsViewModel
 
 @Composable
@@ -143,7 +141,7 @@ private fun TopBar(
         colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary),
         title = {
             Text(
-                text = "Welcome ${AppUser.getInstance().nickname}",
+                text = "Welcome ${UserSingleton.getInstance().nickname}",
                 fontSize = 20.sp
             )
         },
@@ -164,19 +162,19 @@ private fun TopBar(
                 )
             }
 
-            Spacer(modifier = Modifier.width(4.dp))
-
-            IconButton(onClick = { navController.navigate(ScreensRouts.FriendRequests.route) }) {
-                Icon(
-                    imageVector = Icons.Filled.Person, contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-
-                Text(
-                    text = viewModel.numberOfFriendRequests.toString(),
-                    color = Color.Red
-                )
-            }
+//            Spacer(modifier = Modifier.width(4.dp))
+//
+//            IconButton(onClick = { navController.navigate(ScreensRouts.FriendRequests.route) }) {
+//                Icon(
+//                    imageVector = Icons.Filled.Person, contentDescription = null,
+//                    tint = MaterialTheme.colorScheme.onPrimary
+//                )
+//
+//                Text(
+//                    text = viewModel.numberOfFriendRequests.toString(),
+//                    color = Color.Red
+//                )
+//            }
         }
     )
 

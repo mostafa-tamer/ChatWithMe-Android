@@ -1,5 +1,4 @@
 package com.mostafatamer.chatwithme.navigation.screens
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -12,13 +11,16 @@ import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.navigation.ScreensRouts
 import com.mostafatamer.chatwithme.network.repository.UserRepository
 import com.mostafatamer.chatwithme.screens.LoginScreen
+import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.static.RetrofitSingleton
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.viewModels.LoginViewModel
 
+
 @Composable
-fun Login(
+fun LoginScreenConfig(
     navController: NavHostController,
+    stompService: StompService,
 ) {
     val context = LocalContext.current
 
@@ -26,14 +28,15 @@ fun Login(
         mutableStateOf(
             LoginViewModel(
                 UserRepository(
-                    RetrofitSingleton.getRetrofitInstance()
+                    RetrofitSingleton.getInstance()
                 ),
+                stompService = stompService,
                 SharedPreferencesHelper(context, SharedPreferences.Login.name)
             )
         )
     }
 
-    var checked by remember { mutableStateOf(false) }
+    var legalToLoginScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.validateRegisteredUser {
@@ -44,12 +47,11 @@ fun Login(
                     }
                 }
             } else {
-                checked = true
+                legalToLoginScreen = true
             }
         }
     }
 
-    if (checked)
+    if (legalToLoginScreen)
         LoginScreen(viewModel, navController)
 }
-

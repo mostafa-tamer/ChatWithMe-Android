@@ -8,35 +8,23 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.compose.rememberNavController
 import com.mostafatamer.chatwithme.navigation.SetupNavGraph
+import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.ui.theme.ChatWithMeTheme
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import org.json.JSONObject
-import ua.naiksoftware.stomp.Stomp
-import ua.naiksoftware.stomp.StompClient
 
 class MainActivity : ComponentActivity() {
 
-    // Declare the launcher at the top of your Activity/Fragment:
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
@@ -64,6 +52,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val stompService = StompService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,91 +60,51 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ChatWithMeTheme {
-
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-
-//                    Indomi(stompClient = stompClient())
-                    SetupNavGraph(rememberNavController())
-
+                StompConnectionHandler()
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    SetupNavGraph(
+                        rememberNavController(),
+                        stompService,
+                    )
                 }
-
-//                val stompClient = stompClient()
-//                indomi(stompClient)
             }
         }
     }
-}
 
-fun helloWorld() {
-    val coroutineScope = CoroutineScope(Dispatchers.Default)
+    @Composable
+    private fun StompConnectionHandler() {
+        val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
 
-    coroutineScope.launch {
+        DisposableEffect(key1 = Unit) {
+            val lifecycle = lifecycleOwner.value.lifecycle
+            val observer = LifecycleEventObserver { _, event ->
+                when (event) {
+                    Lifecycle.Event.ON_RESUME -> {
+                        println("stomp resumed")
 
-        coroutineScope {
-            launch {
-                for (i in 0..10) {
-                    println("hello $i")
-                    if (i == 5) {
-                        throw CancellationException("error")
+                        if (stompService.isInitialized()) {
+                            if (!stompService.isStompConnected()) {
+                                println("stomp connected")
+                                stompService.connect()
+                            }
+                        }
                     }
+
+                    else -> {}
                 }
             }
 
-            for (i in 0..10) {
-                println("world $i")
+            lifecycle.addObserver(observer)
+
+            onDispose {
+                lifecycle.removeObserver(observer)
+
+
+                println("stomp stopped")
+                if (stompService.isInitialized()) {
+                    stompService.disconnect()
+                }
             }
-        }
-    }
-}
-
-
-private fun stompClient(): StompClient {
-    val stompClient: StompClient =
-        Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://192.168.1.14:9090/gs-guide-websocket")
-    StompUtils.lifecycle(stompClient)
-    stompClient.connect()
-    return stompClient
-}
-
-@Composable
-private fun Indomi(stompClient: StompClient) {
-    var textMostafa by remember {
-        mutableStateOf("text")
-    }
-    var textMahmoud by remember {
-        mutableStateOf("text")
-    }
-
-    LaunchedEffect(key1 = Unit) {
-
-
-        stompClient.topic("/send_friend_request/id_key_2").subscribe { stompMessage ->
-            //            val jsonObject: JSONObject = JSONObject(stompMessage.getPayload())
-            println(stompMessage.payload)
-            textMostafa = stompMessage.payload.toString()
-            //            println(jsonObject)
-        }
-
-    }
-    // A surface container using the 'background' color from the theme
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable {
-                val jsonObject = JSONObject()
-                jsonObject.put("message", "Mostafa Is Playing 2")
-
-                stompClient
-                    .send("/app/sendMessage", jsonObject.toString())
-                    .subscribe()
-            },
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column {
-            Text(text = "Mostafa: $textMostafa\n\n")
-            Text(text = "Mahmod: $textMahmoud")
         }
     }
 }

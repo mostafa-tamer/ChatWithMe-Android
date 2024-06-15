@@ -9,8 +9,8 @@ import ua.naiksoftware.stomp.dto.LifecycleEvent
 import ua.naiksoftware.stomp.dto.StompMessage
 
 
-class StompService(private val stompClient: StompClient) {
-    val x = object : CompletableObserver {
+class StompService {
+    private val completableObserver = object : CompletableObserver {
         //TODO: check if this is needed
         override fun onSubscribe(d: Disposable) {
             println("on sub")
@@ -25,6 +25,16 @@ class StompService(private val stompClient: StompClient) {
             println("on error ${e.message}")
         }
 
+    }
+
+    private lateinit var stompClient: StompClient
+
+    fun init(stompClient: StompClient) {
+        if (this::stompClient.isInitialized) {
+            this.stompClient.disconnect()
+        }
+
+        this.stompClient = stompClient
     }
 
     fun connect() {
@@ -59,16 +69,20 @@ class StompService(private val stompClient: StompClient) {
 
     fun <T> send(topic: String, data: T) {
         val jsonString = Gson().toJson(data)
+        println("Sending $jsonString")
+        println(stompClient.isConnected)
         stompClient.send(topic, jsonString)
-            .subscribe()
+            .subscribe(completableObserver)
     }
 
     fun sendText(topic: String, data: String) {
         stompClient.send(topic, data)
-            .subscribe(x)
+            .subscribe(completableObserver)
     }
 
     fun disconnect() {
         stompClient.disconnect()
     }
+
+    fun isInitialized() = ::stompClient.isInitialized
 }

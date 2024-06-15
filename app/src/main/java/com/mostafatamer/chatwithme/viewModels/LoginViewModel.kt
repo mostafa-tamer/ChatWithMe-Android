@@ -5,7 +5,8 @@ import com.mostafatamer.chatwithme.network.entity.authenticationDto.Authenticati
 import com.mostafatamer.chatwithme.network.entity.authenticationDto.AuthenticationResponse
 import com.mostafatamer.chatwithme.network.entity.dto.UserDto
 import com.mostafatamer.chatwithme.network.repository.UserRepository
-import com.mostafatamer.chatwithme.static.AppUser
+import com.mostafatamer.chatwithme.services.StompService
+import com.mostafatamer.chatwithme.static.UserSingleton
 import com.mostafatamer.chatwithme.static.JsonConverter
 import com.mostafatamer.chatwithme.static.RetrofitSingleton
 import com.mostafatamer.chatwithme.static.StompClientSingleton
@@ -13,6 +14,7 @@ import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 
 class LoginViewModel(
     private val userRepository: UserRepository,
+    private val stompService: StompService,
     private val loginSharedPreferences: SharedPreferencesHelper,
 ) : AuthenticationViewModel() {
 
@@ -24,21 +26,26 @@ class LoginViewModel(
         firebaseToken?.let { firebaseToken ->
             userRepository.login(AuthenticationRequest(username, password, firebaseToken))
                 .setOnSuccess { apiResponse ->
-                    println(apiResponse)
-                    apiResponse.data?.let { authenticationResponse ->
 
-                        prepareSingletons(authenticationResponse.user, authenticationResponse.token)
+                    apiResponse.data?.let { authenticationResponse ->
+                        prepareNeededObjects(
+                            authenticationResponse.user,
+                            authenticationResponse.token
+                        )
                         saveUserCredentials(authenticationResponse)
+
                     }
                     success.invoke(apiResponse.data != null)
                 }.execute()
         }
     }
 
-    private fun prepareSingletons(user: UserDto, token: String) {
-        AppUser.getInstance(user)
-        RetrofitSingleton.getRetrofitInstance(token)
-        StompClientSingleton.createInstance(token)
+    private fun prepareNeededObjects(user: UserDto, token: String) {
+        UserSingleton.getInstance(user)
+        RetrofitSingleton.getInstance(token)
+        val stompClient = StompClientSingleton.getInstance(token)
+        stompService.init(stompClient)
+        stompService.connect()
     }
 
     private fun saveUserCredentials(authenticationResponse: AuthenticationResponse) {
@@ -77,7 +84,7 @@ class LoginViewModel(
         if (currentTime - userTokenTime < ninetyDays) {
             val user = JsonConverter.getInstance().fromJson(userJson, UserDto::class.java)!!
 
-            prepareSingletons(user, userToken)
+            prepareNeededObjects(user, userToken)
 
             onValidate.invoke(true)
         }

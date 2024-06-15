@@ -15,10 +15,9 @@ import com.mostafatamer.chatwithme.network.firebase.FriendRequest
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.AppUser
+import com.mostafatamer.chatwithme.static.UserSingleton
 import com.mostafatamer.chatwithme.static.JsonConverter
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
-import com.mostafatamer.chatwithme.viewModels.abstract.StompConnection
 import kotlinx.coroutines.launch
 
 class ChatsViewModel(
@@ -27,7 +26,8 @@ class ChatsViewModel(
     private val stompService: StompService,
     private val chatSharedPreferences: SharedPreferencesHelper,
     private val loginSharedPreferences: SharedPreferencesHelper,
-) : ViewModel(), StompConnection {
+) : ViewModel()
+{
     //chat tag -> lastMessageNumber to missingMessages
     private val lastReadMessagesMap = mutableMapOf<String, Pair<Long, Long>>()
     var numberOfFriendRequests by mutableIntStateOf(0)
@@ -37,13 +37,6 @@ class ChatsViewModel(
 
     val chats = mutableStateListOf<ChatWithMissingMessages>()
 
-    init {
-        ensureStompConnected()
-    }
-
-    override fun ensureStompConnected() {
-        ensureStompConnected(stompService)
-    }
 
 
     private fun observeChatsLastMessage() {
@@ -119,7 +112,7 @@ class ChatsViewModel(
             chatSharedPreferences.getLong(
                 SharedPreferences.FriendChat.lastMessageNumberWithChatTagAndUsername(
                     chatTag,
-                    AppUser.getInstance().username
+                    UserSingleton.getInstance().username
                 )
             )
 
@@ -150,14 +143,12 @@ class ChatsViewModel(
             }.execute()
     }
 
-    override fun cleanUp() {
-        stompService.disconnect()
-    }
+
 
     fun observeFriendRequests() {
         val topic =
             WebSocketPaths.SendFriendRequestMessageBroker
-                .pathVariable(AppUser.getInstance().username)
+                .pathVariable(UserSingleton.getInstance().username)
 
         stompService.topicListener(
             topic,
@@ -185,7 +176,7 @@ class ChatsViewModel(
 
     fun observeNewChat() {
         val topic = WebSocketPaths.AcceptFriendRequestMessageBroker
-            .pathVariable(AppUser.getInstance().username)
+            .pathVariable(UserSingleton.getInstance().username)
         println(topic)
         stompService.topicListener(
             topic,

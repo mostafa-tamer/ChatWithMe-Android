@@ -10,9 +10,8 @@ import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
 import com.mostafatamer.chatwithme.network.entity.dto.MessageDto
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.AppUser
+import com.mostafatamer.chatwithme.static.UserSingleton
 import com.mostafatamer.chatwithme.static.JsonConverter
-import com.mostafatamer.chatwithme.viewModels.abstract.StompConnection
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -24,15 +23,9 @@ class FriendChatViewModel(
     private val stompService: StompService,
     private val sharedPreferencesHelper: SharedPreferencesHelper,
     val chatDto: ChatDto,
-) : ViewModel(), StompConnection {
+) : ViewModel()  {
 
-    init {
-        ensureStompConnected(stompService)
-    }
 
-    override fun cleanUp() {
-        stompService.disconnect()
-    }
 
     private lateinit var onNewMessage: () -> Unit
 
@@ -43,7 +36,7 @@ class FriendChatViewModel(
     fun sendMessage(message: String) {
         val newMessage = MessageDto(
             message = message,
-            senderUsername = AppUser.getInstance().username,
+            senderUsername = UserSingleton.getInstance().username,
             timeStamp = System.currentTimeMillis()
         )
 
@@ -70,7 +63,7 @@ class FriendChatViewModel(
                 sharedPreferencesHelper.setValue(
                     SharedPreferences.FriendChat.lastMessageNumberWithChatTagAndUsername(
                         chatDto.tag,
-                        AppUser.getInstance().username
+                        UserSingleton.getInstance().username
                     ),
                     messageDto.messageNumber!!
                 )
@@ -103,7 +96,7 @@ class FriendChatViewModel(
                         sharedPreferencesHelper.setValue(
                             SharedPreferences.FriendChat.lastMessageNumberWithChatTagAndUsername(
                                 chatDto.tag,
-                                AppUser.getInstance().username
+                                UserSingleton.getInstance().username
                             ), it.messageNumber!!
                         )
                     }
@@ -132,8 +125,5 @@ class FriendChatViewModel(
         this.onNewMessage = onNewMessage
     }
 
-    override fun ensureStompConnected() {
-        ensureStompConnected(stompService)
-    }
 }
 

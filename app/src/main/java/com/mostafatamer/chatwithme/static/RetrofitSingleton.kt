@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitSingleton private constructor() {
     companion object {
         private lateinit var retrofit: Retrofit
-        fun getRetrofitInstance(token: String? = null): Retrofit {
+        fun getInstance(token: String? = null): Retrofit {
             return if (Companion::retrofit.isInitialized && token == null) {
                 retrofit
             } else {

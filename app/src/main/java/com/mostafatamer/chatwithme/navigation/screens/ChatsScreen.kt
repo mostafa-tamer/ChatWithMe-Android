@@ -16,14 +16,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.navigation.MainScreenRouts
-import com.mostafatamer.chatwithme.navigation.helper.StompConnection
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
 import com.mostafatamer.chatwithme.screens.FriendsChatScreen
 import com.mostafatamer.chatwithme.screens.components.BottomNavigationBar
 import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.static.RetrofitSingleton
-import com.mostafatamer.chatwithme.static.StompClientSingleton
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.viewModels.ChatsViewModel
 
@@ -31,6 +29,7 @@ import com.mostafatamer.chatwithme.viewModels.ChatsViewModel
 @Composable
 fun MainScreen(
     rememberNavController: NavHostController,
+    stompService: StompService,
 ) {
     val mainNavController = rememberNavController()
 
@@ -48,37 +47,34 @@ fun MainScreen(
                 startDestination = MainScreenRouts.FriendsChat.route
             ) {
                 composable(route = MainScreenRouts.FriendsChat.route) {
-                    val viewModel by getViewModel()
-                    StompConnection(viewModel = viewModel)
+                    val viewModel by getViewModel(stompService)
                     FriendsChatScreen(viewModel, rememberNavController)
                 }
-//                composable(route = MainScreenRouts.GroupChat.route) {
-//
-//                }
-//                composable(route = MainScreenRouts.FriendsChat.route) {
-//
-//                }
+                composable(route = MainScreenRouts.GroupChat.route) {
+
+                }
+                composable(route = MainScreenRouts.FriendShip.route) {
+                    FriendRequestsScreen(mainNavController, stompService)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun getViewModel(): MutableState<ChatsViewModel> {
+private fun getViewModel(stompService: StompService): MutableState<ChatsViewModel> {
     val context = LocalContext.current
 
     val viewModel = remember {
         mutableStateOf(
             ChatsViewModel(
                 ChatRepository(
-                    RetrofitSingleton.getRetrofitInstance()
+                    RetrofitSingleton.getInstance()
                 ),
                 FriendshipRepository(
-                    RetrofitSingleton.getRetrofitInstance()
+                    RetrofitSingleton.getInstance()
                 ),
-                StompService(
-                    StompClientSingleton.createInstance()
-                ),
+                stompService,
                 SharedPreferencesHelper(
                     context,
                     SharedPreferences.FriendChat.name

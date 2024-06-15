@@ -1,25 +1,30 @@
 package com.mostafatamer.chatwithme.screens.components
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.mostafatamer.chatwithme.R
 import com.mostafatamer.chatwithme.navigation.MainScreenRouts
 
 data class BarItem(
     val title: String,
     val route: String,
-    val imageVector: ImageVector? = null,
-//    val vectorId: Int? = null
+    val drawable: Int,
 )
 
 object NavBarItems {
@@ -27,17 +32,17 @@ object NavBarItems {
         BarItem(
             title = "Friends",
             route = MainScreenRouts.FriendsChat.route,
-            imageVector = Icons.AutoMirrored.Filled.List,
+            drawable = R.drawable.chat_round_line_svgrepo_com,
         ),
         BarItem(
             title = "Groups",
             route = MainScreenRouts.GroupChat.route,
-            imageVector = Icons.AutoMirrored.Filled.List,
+            drawable = R.drawable.groups_svgrepo_com,
         ),
         BarItem(
             title = "Friendship",
             route = MainScreenRouts.FriendShip.route,
-            imageVector = Icons.AutoMirrored.Filled.List,
+            drawable = R.drawable.friend_svgrepo_com,
         ),
     )
 }
@@ -50,9 +55,12 @@ fun BottomNavigationBar(
     val backStackEntry by navHostController.currentBackStackEntryAsState()
     val currentRout = backStackEntry?.destination?.route
 
-    BottomNavigation(backgroundColor = MaterialTheme.colorScheme.primary) {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colorScheme.primary
+    ) {
         navbarItems.forEach { navItem ->
             BottomNavigationItem(
+                modifier = Modifier.padding(vertical = 8.dp),
                 selectedContentColor = MaterialTheme.colorScheme.onPrimary,
                 selected = currentRout == navItem.route,
                 onClick = {
@@ -65,22 +73,20 @@ fun BottomNavigationBar(
                     }
                 },
                 icon = {
-                    navItem.imageVector?.let {
+                    Box(modifier = Modifier
+                        .size(40.dp) ) {
                         Icon(
-                            imageVector = navItem.imageVector,
+                            painter = painterResource(id = navItem.drawable),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
-//                    navItem.vectorId?.let {
-//                        Icon(
-//                            painter = painterResource(id = navItem.vectorId),
-//                            contentDescription = null
-//                        )
-//                    }
                 },
                 label = {
-                    Text(text = navItem.title, color = MaterialTheme.colorScheme.onPrimary)
+                    Text(
+                        text = navItem.title,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
                 }
             )
         }
