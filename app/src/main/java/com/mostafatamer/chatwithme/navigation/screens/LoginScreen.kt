@@ -18,7 +18,7 @@ import com.mostafatamer.chatwithme.viewModels.LoginViewModel
 
 
 @Composable
-fun LoginScreenConfig(
+fun LoginScreen(
     navController: NavHostController,
     stompService: StompService,
 ) {

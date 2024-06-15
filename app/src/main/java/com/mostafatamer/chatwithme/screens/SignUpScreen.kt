@@ -85,7 +85,7 @@ private fun ColumnScope.Content(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            LoginScreenConfig(navController)
+            LoginScreen(navController)
         }
     }
 }
@@ -166,7 +166,7 @@ private fun signup(
 }
 
 @Composable
-private fun LoginScreenConfig(navController: NavHostController) {
+private fun LoginScreen(navController: NavHostController) {
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "already have an account? login here",

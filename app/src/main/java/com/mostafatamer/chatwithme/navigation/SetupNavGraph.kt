@@ -8,9 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mostafatamer.chatwithme.navigation.screens.FriendChatScreen
+import com.mostafatamer.chatwithme.navigation.screens.LoginScreen
 import com.mostafatamer.chatwithme.navigation.screens.MainScreen
 import com.mostafatamer.chatwithme.network.repository.UserRepository
-import com.mostafatamer.chatwithme.screens.LoginScreenConfig
 import com.mostafatamer.chatwithme.screens.SignUpScreen
 import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.static.RetrofitSingleton
@@ -35,7 +35,7 @@ fun SetupNavGraph(navController: NavHostController, stompService: StompService) 
         }
 
         composable(ScreensRouts.Login.route) {
-            LoginScreenConfig(navController, stompService)
+            LoginScreen(navController, stompService)
         }
 
         composable(ScreensRouts.Main.route) {
