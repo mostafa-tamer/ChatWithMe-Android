@@ -1,4 +1,4 @@
-package com.mostafatamer.chatwithme.static
+package com.mostafatamer.chatwithme.Singleton
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

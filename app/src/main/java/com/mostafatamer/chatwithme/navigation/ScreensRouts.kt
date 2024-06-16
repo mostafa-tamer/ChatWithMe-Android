@@ -1,7 +1,7 @@
 package com.mostafatamer.chatwithme.navigation
 
 import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
-import com.mostafatamer.chatwithme.static.JsonConverter
+import com.mostafatamer.chatwithme.Singleton.JsonConverter
 
 sealed class ScreensRouts(val route: String) {
     data object SignUp : ScreensRouts("signUp")

@@ -16,8 +16,8 @@ import com.mostafatamer.chatwithme.network.entity.MessageType
 import com.mostafatamer.chatwithme.network.firebase.AcceptFriendRequest
 import com.mostafatamer.chatwithme.network.firebase.Chat
 import com.mostafatamer.chatwithme.network.firebase.FriendRequest
-import com.mostafatamer.chatwithme.static.CurrentScreen
-import com.mostafatamer.chatwithme.static.JsonConverter
+import com.mostafatamer.chatwithme.Singleton.CurrentScreen
+import com.mostafatamer.chatwithme.Singleton.JsonConverter
 import org.json.JSONObject
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {

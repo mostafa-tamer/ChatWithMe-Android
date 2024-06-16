@@ -1,4 +1,4 @@
-package com.mostafatamer.chatwithme.static
+package com.mostafatamer.chatwithme.Singleton
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

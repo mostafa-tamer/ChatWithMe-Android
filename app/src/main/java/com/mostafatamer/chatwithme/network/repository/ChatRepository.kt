@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 class ChatRepository(retrofit: Retrofit) {
     private val apiService = retrofit.create(ChatApiService::class.java)
 
-    fun allFriendsChat() = CallDecorator(apiService.allChats())
+    fun allFriendshipChat() = CallDecorator(apiService.allChats())
 
     fun loadFriendChat(chatTag: String) = CallDecorator(apiService.loadFriendChat(chatTag))
 

@@ -10,15 +10,16 @@ import ua.naiksoftware.stomp.dto.StompMessage
 
 
 class StompService {
+    private val jsonConverter = Gson()
     private val completableObserver = object : CompletableObserver {
         //TODO: check if this is needed
         override fun onSubscribe(d: Disposable) {
-            println("on sub")
+            println("onSubscribe")
             println(d.isDisposed)
         }
 
         override fun onComplete() {
-            println("on comp")
+            println("onComplete")
         }
 
         override fun onError(e: Throwable) {
@@ -30,9 +31,9 @@ class StompService {
     private lateinit var stompClient: StompClient
 
     fun init(stompClient: StompClient) {
-        if (this::stompClient.isInitialized) {
-            this.stompClient.disconnect()
-        }
+//        if (this::stompClient.isInitialized) {
+//            this.stompClient.disconnect()
+//        }
 
         this.stompClient = stompClient
     }
@@ -52,25 +53,23 @@ class StompService {
         }
     }
 
-    fun topicListener(
+    fun <T> topicListener(
         topic: String,
+        clazz: Class<T>,
         onSubscribe: () -> Unit = {},
-        onStompMessage: (StompMessage) -> Unit,
+        onStompMessage: (T) -> Unit,
     ): Disposable? {
-        val stompMessage: Flowable<StompMessage> = stompClient.topic(topic)
-            .doOnSubscribe {
-                onSubscribe.invoke()
-            }
+        val stompMessageFlowable: Flowable<StompMessage> = stompClient.topic(topic)
+            .doOnSubscribe { onSubscribe.invoke() }
 
-        return stompMessage.subscribe { message ->
-            onStompMessage(message)
+        return stompMessageFlowable.subscribe { message ->
+            val data = jsonConverter.fromJson(message.payload, clazz)
+            onStompMessage(data)
         }
     }
 
     fun <T> send(topic: String, data: T) {
         val jsonString = Gson().toJson(data)
-        println("Sending $jsonString")
-        println(stompClient.isConnected)
         stompClient.send(topic, jsonString)
             .subscribe(completableObserver)
     }

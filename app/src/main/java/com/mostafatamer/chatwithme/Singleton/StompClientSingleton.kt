@@ -1,4 +1,4 @@
-package com.mostafatamer.chatwithme.static
+package com.mostafatamer.chatwithme.Singleton
 
 import ua.naiksoftware.stomp.Stomp
 import ua.naiksoftware.stomp.StompClient

@@ -35,15 +35,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.mostafatamer.chatwithme.R
 import com.mostafatamer.chatwithme.navigation.ScreensRouts
-import com.mostafatamer.chatwithme.static.UserSingleton
-import com.mostafatamer.chatwithme.viewModels.ChatsViewModel
+import com.mostafatamer.chatwithme.Singleton.UserSingleton
+import com.mostafatamer.chatwithme.viewModels.friendship_chat.FriendshipChatViewModel
 
 @Composable
-fun FriendsChatScreen(viewModel: ChatsViewModel, navController: NavHostController) {
+fun FriendshipChat(viewModel: FriendshipChatViewModel, navController: NavHostController) {
     LaunchedEffect(Unit) {
-        viewModel.loadAllChatsAndObserveChatsForNewMessageAndLoadLastMessageNumberOfEachChat()
         viewModel.observeFriendRequests()
-        viewModel.observeNewChat()
+        viewModel.observeNewChatAndLoadChats()
     }
 
     Scaffold(
@@ -66,7 +65,7 @@ fun FriendsChatScreen(viewModel: ChatsViewModel, navController: NavHostControlle
 
 @Composable
 private fun Content(
-    viewModel: ChatsViewModel,
+    viewModel: FriendshipChatViewModel,
     navController: NavHostController,
 ) {
     LazyColumn {
@@ -85,7 +84,7 @@ private fun Content(
 
 @Composable
 private fun Card(
-    chatWithMissingMessages: ChatsViewModel.ChatWithMissingMessages,
+    chatWithMissingMessages: FriendshipChatViewModel.ChatWithMissingMessages,
     navController: NavHostController,
 ) {
     Row(
@@ -135,7 +134,7 @@ private fun Card(
 @Composable
 private fun TopBar(
     navController: NavHostController,
-    viewModel: ChatsViewModel,
+    viewModel: FriendshipChatViewModel,
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary),

@@ -1,4 +1,4 @@
-package com.mostafatamer.chatwithme.static
+package com.mostafatamer.chatwithme.Singleton
 
 import com.mostafatamer.chatwithme.network.entity.dto.UserDto
 

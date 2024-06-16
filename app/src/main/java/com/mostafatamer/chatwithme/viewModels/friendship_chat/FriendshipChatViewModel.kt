@@ -1,4 +1,4 @@
-package com.mostafatamer.chatwithme.viewModels
+package com.mostafatamer.chatwithme.viewModels.friendship_chat
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mostafatamer.chatwithme.Singleton.UserSingleton
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.enumeration.WebSocketPaths
 import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
@@ -15,28 +16,26 @@ import com.mostafatamer.chatwithme.network.firebase.FriendRequest
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.UserSingleton
-import com.mostafatamer.chatwithme.static.JsonConverter
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import kotlinx.coroutines.launch
 
-class ChatsViewModel(
+class FriendshipChatViewModel(
     private val chatRepository: ChatRepository,
     private val friendshipRepository: FriendshipRepository,
     private val stompService: StompService,
     private val chatSharedPreferences: SharedPreferencesHelper,
     private val loginSharedPreferences: SharedPreferencesHelper,
-) : ViewModel()
-{
+) : ViewModel() {
     //chat tag -> lastMessageNumber to missingMessages
     private val lastReadMessagesMap = mutableMapOf<String, Pair<Long, Long>>()
+
     var numberOfFriendRequests by mutableIntStateOf(0)
         private set
     private val newFriendRequests = mutableSetOf<FriendRequest>()
-    private val observedChats = mutableSetOf<ChatDto>()
 
     val chats = mutableStateListOf<ChatWithMissingMessages>()
 
+    val loadChatManager = LoadChatManager(this)
 
 
     private fun observeChatsLastMessage() {
@@ -53,18 +52,16 @@ class ChatsViewModel(
         onSubscribe: () -> Unit = {},
     ) {
         val topic = WebSocketPaths.SendMessageToChatMessageBroker
-            .pathVariable(chatWithMissingMessages.chat.tag)
+            .withChatTag(chatWithMissingMessages.chat.tag)
 
         stompService.topicListener(
-            topic, onSubscribe = {
+            topic, MessageDto::class.java, onSubscribe = {
                 onSubscribe()
             }
         ) {
-            val messageDto = JsonConverter.getInstance()
-                .fromJson(it.payload, MessageDto::class.java)
 
             if (lastReadMessagesMap[chatWithMissingMessages.chat.tag] != null) {
-                val missingMessage = (messageDto.messageNumber!!
+                val missingMessage = (it.messageNumber!!
                         - lastReadMessagesMap[chatWithMissingMessages.chat.tag]!!.first
                         + lastReadMessagesMap[chatWithMissingMessages.chat.tag]!!.second)
 
@@ -72,11 +69,11 @@ class ChatsViewModel(
             } else {
                 val missingMessages = getMissingMessages(
                     chatWithMissingMessages.chat.tag,
-                    messageDto.messageNumber!!
+                    it.messageNumber!!
                 )
 
                 lastReadMessagesMap[chatWithMissingMessages.chat.tag] =
-                    messageDto.messageNumber!! to missingMessages
+                    it.messageNumber!! to missingMessages
 
                 updateMissingMessages(index, missingMessages)
             }
@@ -127,38 +124,43 @@ class ChatsViewModel(
         chats[index] = chats[index].copy(missingMessages = missingMessage)
     }
 
-    fun loadAllChatsAndObserveChatsForNewMessageAndLoadLastMessageNumberOfEachChat() {
-        chatRepository.allFriendsChat()
+
+    private fun loadChats() {
+        chatRepository.allFriendshipChat()
             .setOnSuccess { apiResponse ->
                 apiResponse.data?.let { chatResponse ->
+                    val newChats = chatResponse.map { ChatWithMissingMessages(it) }
                     chats.clear()
-                    lastReadMessagesMap.clear()
-
-                    chatResponse.forEach {chat->
-                        repeat(20){ chats.add(ChatWithMissingMessages(chat)) }
-                    }
-
-                    observeChatsLastMessage()
+                    chats.addAll(newChats)
                 }
             }.execute()
     }
 
+    fun observeNewChatAndLoadChats() {
+        val topic = WebSocketPaths.AcceptFriendRequestMessageBroker
+            .withUsername(UserSingleton.getInstance().username)
 
+        stompService.topicListener(
+            topic, ChatDto::class.java,
+            onSubscribe = {
+                loadChats()
+            }
+        ) { chatDto ->
+            loadChatManager.addChat(chatDto)
+        }
+    }
 
     fun observeFriendRequests() {
         val topic =
             WebSocketPaths.SendFriendRequestMessageBroker
-                .pathVariable(UserSingleton.getInstance().username)
+                .withUsername(UserSingleton.getInstance().username)
 
         stompService.topicListener(
-            topic,
+            topic, FriendRequest::class.java,
             onSubscribe = {
                 loadNumberOfFriendRequests()
             }
-        ) {
-            val friendRequest = JsonConverter.getInstance()
-                .fromJson(it.payload, FriendRequest::class.java)
-//            println(it.payload)
+        ) { friendRequest ->
             if (!newFriendRequests.contains(friendRequest)) {
                 this.numberOfFriendRequests++
             }
@@ -172,31 +174,6 @@ class ChatsViewModel(
                     numberOfFriendRequests += it
                 }
             }.execute()
-    }
-
-    fun observeNewChat() {
-        val topic = WebSocketPaths.AcceptFriendRequestMessageBroker
-            .pathVariable(UserSingleton.getInstance().username)
-        println(topic)
-        stompService.topicListener(
-            topic,
-            onSubscribe = {
-                println("sub")
-            }
-        ) {
-            val chatDto = JsonConverter.getInstance()
-                .fromJson(it.payload, ChatDto::class.java)
-
-            if (!observedChats.contains(chatDto)) {
-                val chatWithMissingMessages = ChatWithMissingMessages(chatDto, 0)
-
-                chats.add(chatWithMissingMessages)
-                observedChats.add(chatDto)
-
-                val index = chats.indexOf(chatWithMissingMessages)
-                observeChatLastMessage(chatWithMissingMessages, index)
-            }
-        }
     }
 
     private fun loadChatLastMessageNumber(chat: ChatDto, index: Int) {

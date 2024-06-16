@@ -7,13 +7,14 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.mostafatamer.chatwithme.AppDependencies
+import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.navigation.screens.FriendChatScreen
 import com.mostafatamer.chatwithme.navigation.screens.LoginScreen
 import com.mostafatamer.chatwithme.navigation.screens.MainScreen
 import com.mostafatamer.chatwithme.network.repository.UserRepository
 import com.mostafatamer.chatwithme.screens.SignUpScreen
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.RetrofitSingleton
 import com.mostafatamer.chatwithme.viewModels.SignUpViewModel
 
 @Composable
@@ -35,11 +36,11 @@ fun SetupNavGraph(navController: NavHostController, stompService: StompService) 
         }
 
         composable(ScreensRouts.Login.route) {
-            LoginScreen(navController, stompService)
+            LoginScreen(navController, stompService, )
         }
 
         composable(ScreensRouts.Main.route) {
-            MainScreen(navController, stompService)
+            MainScreen(navController, stompService, )
         }
 
         composable(ScreensRouts.FriendChatScreensRouts.route) { navBackstackEntry ->

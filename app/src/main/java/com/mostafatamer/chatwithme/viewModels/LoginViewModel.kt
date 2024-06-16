@@ -6,10 +6,10 @@ import com.mostafatamer.chatwithme.network.entity.authenticationDto.Authenticati
 import com.mostafatamer.chatwithme.network.entity.dto.UserDto
 import com.mostafatamer.chatwithme.network.repository.UserRepository
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.UserSingleton
-import com.mostafatamer.chatwithme.static.JsonConverter
-import com.mostafatamer.chatwithme.static.RetrofitSingleton
-import com.mostafatamer.chatwithme.static.StompClientSingleton
+import com.mostafatamer.chatwithme.Singleton.UserSingleton
+import com.mostafatamer.chatwithme.Singleton.JsonConverter
+import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
+import com.mostafatamer.chatwithme.Singleton.StompClientSingleton
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 
 class LoginViewModel(

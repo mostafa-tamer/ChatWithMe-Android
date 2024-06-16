@@ -12,7 +12,7 @@ import com.mostafatamer.chatwithme.navigation.ScreensRouts
 import com.mostafatamer.chatwithme.network.repository.UserRepository
 import com.mostafatamer.chatwithme.screens.LoginScreen
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.RetrofitSingleton
+import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.viewModels.LoginViewModel
 

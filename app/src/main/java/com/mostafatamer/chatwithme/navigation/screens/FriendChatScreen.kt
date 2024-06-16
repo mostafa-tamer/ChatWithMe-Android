@@ -17,11 +17,11 @@ import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.screens.FriendChatScreen
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.CurrentScreen
-import com.mostafatamer.chatwithme.static.JsonConverter
-import com.mostafatamer.chatwithme.static.RetrofitSingleton
+import com.mostafatamer.chatwithme.Singleton.CurrentScreen
+import com.mostafatamer.chatwithme.Singleton.JsonConverter
+import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
-import com.mostafatamer.chatwithme.viewModels.FriendChatViewModel
+import com.mostafatamer.chatwithme.viewModels.friend_chat.FriendChatViewModel
 
 @Composable
 fun FriendChatScreen(

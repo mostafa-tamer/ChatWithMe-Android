@@ -11,6 +11,7 @@ abstract class AuthenticationViewModel : ViewModel() {
         private set
 
     fun getFirebaseToken() {
+
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             firebaseToken = task.result
         }

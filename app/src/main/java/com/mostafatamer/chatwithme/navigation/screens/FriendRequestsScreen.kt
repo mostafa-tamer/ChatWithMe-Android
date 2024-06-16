@@ -8,8 +8,7 @@ import androidx.navigation.NavHostController
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
 import com.mostafatamer.chatwithme.screens.FriendRequestsScreen
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.RetrofitSingleton
-import com.mostafatamer.chatwithme.static.StompClientSingleton
+import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.viewModels.FriendRequestViewModel
 
 @Composable

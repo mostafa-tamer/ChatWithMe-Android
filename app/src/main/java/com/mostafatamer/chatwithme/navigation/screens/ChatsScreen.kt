@@ -14,16 +14,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mostafatamer.chatwithme.AppDependencies
+import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.navigation.MainScreenRouts
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
-import com.mostafatamer.chatwithme.screens.FriendsChatScreen
+import com.mostafatamer.chatwithme.screens.FriendshipChat
 import com.mostafatamer.chatwithme.screens.components.BottomNavigationBar
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.static.RetrofitSingleton
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
-import com.mostafatamer.chatwithme.viewModels.ChatsViewModel
+import com.mostafatamer.chatwithme.viewModels.friendship_chat.FriendshipChatViewModel
 
 
 @Composable
@@ -48,7 +49,7 @@ fun MainScreen(
             ) {
                 composable(route = MainScreenRouts.FriendsChat.route) {
                     val viewModel by getViewModel(stompService)
-                    FriendsChatScreen(viewModel, rememberNavController)
+                    FriendshipChat(viewModel, rememberNavController)
                 }
                 composable(route = MainScreenRouts.GroupChat.route) {
 
@@ -62,12 +63,14 @@ fun MainScreen(
 }
 
 @Composable
-private fun getViewModel(stompService: StompService): MutableState<ChatsViewModel> {
+private fun getViewModel(
+    stompService: StompService,
+): MutableState<FriendshipChatViewModel> {
     val context = LocalContext.current
 
     val viewModel = remember {
         mutableStateOf(
-            ChatsViewModel(
+            FriendshipChatViewModel(
                 ChatRepository(
                     RetrofitSingleton.getInstance()
                 ),
@@ -83,6 +86,7 @@ private fun getViewModel(stompService: StompService): MutableState<ChatsViewMode
                     context,
                     SharedPreferences.Login.name
                 ),
+
             )
         )
     }

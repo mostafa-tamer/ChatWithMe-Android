@@ -45,9 +45,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.mostafatamer.chatwithme.enumeration.Screens
 import com.mostafatamer.chatwithme.network.entity.dto.MessageDto
-import com.mostafatamer.chatwithme.static.UserSingleton
-import com.mostafatamer.chatwithme.static.CurrentScreen
-import com.mostafatamer.chatwithme.viewModels.FriendChatViewModel
+import com.mostafatamer.chatwithme.Singleton.CurrentScreen
+import com.mostafatamer.chatwithme.Singleton.UserSingleton
+import com.mostafatamer.chatwithme.utils.timeMillisConverter
+import com.mostafatamer.chatwithme.viewModels.friend_chat.FriendChatViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -58,14 +59,9 @@ fun FriendChatScreen(viewModel: FriendChatViewModel, navController: NavHostContr
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        CurrentScreen.screen = Screens.ChatsScreen.apply {
-            chatTag = viewModel.chatDto.tag
-        }
-
-        viewModel.setOnNewMessageReceived {
+        viewModel.observeAndLoadChat {
             scrollToLastMessage(coroutineScope, lazyListState, viewModel)
         }
-        viewModel.observeAndLoadChat()
     }
 
     Box(
@@ -124,7 +120,7 @@ private fun TitleBar(viewModel: FriendChatViewModel) {
 fun Message(messageDto: MessageDto, viewModel: FriendChatViewModel, isMyMessage: Boolean) {
     val timeString by remember {
         mutableStateOf(
-            viewModel.timeMillisConverter(
+            timeMillisConverter(
                 messageDto.timeStamp
             )
         )
