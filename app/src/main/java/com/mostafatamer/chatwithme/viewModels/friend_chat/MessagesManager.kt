@@ -1,11 +1,14 @@
 package com.mostafatamer.chatwithme.viewModels.friend_chat
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.mostafatamer.chatwithme.Singleton.UserSingleton
+import com.mostafatamer.chatwithme.AppDependencies
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.network.entity.dto.MessageDto
 
-class MessagesManager(private val friendChatViewModel: FriendChatViewModel) {
+class MessagesManager(
+    private val friendChatViewModel: FriendChatViewModel,
+    private val appDependencies: AppDependencies,
+) {
 
     private val loadedMessages = mutableSetOf<MessageDto>()
 
@@ -13,7 +16,7 @@ class MessagesManager(private val friendChatViewModel: FriendChatViewModel) {
         if (!loadedMessages.contains(messageDto)) {
             loadedMessages.add(messageDto)
             friendChatViewModel.messages.addSorted(messageDto)
-            saveLastMessageNumberOfTheChat(messageDto)
+            saveLastMessageNumberOfTheChat(messageDto, appDependencies)
             onNewMessage.invoke()
         }
     }
@@ -34,11 +37,14 @@ class MessagesManager(private val friendChatViewModel: FriendChatViewModel) {
         onNewMessage.invoke()
     }
 
-    private fun saveLastMessageNumberOfTheChat(messageDto: MessageDto) {
+    private fun saveLastMessageNumberOfTheChat(
+        messageDto: MessageDto,
+        appDependencies: AppDependencies,
+    ) {
         friendChatViewModel.sharedPreferencesHelper.setValue(
             SharedPreferences.FriendChat.lastMessageNumberWithChatTagAndUsername(
                 friendChatViewModel.chatDto.tag,
-                UserSingleton.getInstance().username
+                appDependencies.user.username
             ),
             messageDto.messageNumber!!
         )
@@ -64,7 +70,7 @@ class MessagesManager(private val friendChatViewModel: FriendChatViewModel) {
         val lastMessageNumberKey =
             SharedPreferences.FriendChat.lastMessageNumberWithChatTagAndUsername(
                 friendChatViewModel.chatDto.tag,
-                UserSingleton.getInstance().username
+                appDependencies.user.username
             )
         return lastMessageNumberKey
     }

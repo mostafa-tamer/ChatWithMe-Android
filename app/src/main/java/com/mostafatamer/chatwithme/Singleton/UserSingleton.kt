@@ -1,18 +1,18 @@
 package com.mostafatamer.chatwithme.Singleton
 
-import com.mostafatamer.chatwithme.network.entity.dto.UserDto
+import com.mostafatamer.chatwithme.network.entity.dto.User
 
-class UserSingleton {
-    companion object {
-        @Volatile
-        private var instance: UserDto? = null
-        fun getInstance(userDto: UserDto? = null): UserDto {
-            if (instance == null && userDto == null)
-                throw IllegalStateException("instance is null")
-
-            return instance ?: synchronized(this) {
-                userDto.also { instance = userDto }!!
-            }
-        }
-    }
-}
+//class UserSingleton {
+//    companion object {
+//        @Volatile
+//        private var instance: User? = null
+//        fun getInstance(user: User? = null): User {
+//            if (instance == null && user == null)
+//                throw IllegalStateException("instance is null")
+//
+//            return instance ?: synchronized(this) {
+//                user.also { instance = user }!!
+//            }
+//        }
+//    }
+//}

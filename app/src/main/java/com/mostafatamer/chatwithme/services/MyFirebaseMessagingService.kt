@@ -9,7 +9,7 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.mostafatamer.chatwithme.MainActivity
+import com.mostafatamer.chatwithme.activities.MainActivity
 import com.mostafatamer.chatwithme.R
 import com.mostafatamer.chatwithme.enumeration.Screens
 import com.mostafatamer.chatwithme.network.entity.MessageType
@@ -28,9 +28,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val messageType = jsonObject.getString("messageType")
         val jsonData = jsonObject.getString("data")
-
-        println(messageType)
-        println(jsonData)
 
         when (messageType) {
             MessageType.FRIEND_CHAT_MESSAGE.value -> {

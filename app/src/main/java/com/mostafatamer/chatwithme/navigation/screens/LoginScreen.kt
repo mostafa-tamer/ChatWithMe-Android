@@ -1,4 +1,5 @@
 package com.mostafatamer.chatwithme.navigation.screens
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -7,12 +8,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.mostafatamer.chatwithme.AppDependencies
+import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.navigation.ScreensRouts
 import com.mostafatamer.chatwithme.network.repository.UserRepository
 import com.mostafatamer.chatwithme.screens.LoginScreen
-import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.viewModels.LoginViewModel
 
@@ -20,7 +21,7 @@ import com.mostafatamer.chatwithme.viewModels.LoginViewModel
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    stompService: StompService,
+    appDependencies: AppDependencies,
 ) {
     val context = LocalContext.current
 
@@ -30,7 +31,7 @@ fun LoginScreen(
                 UserRepository(
                     RetrofitSingleton.getInstance()
                 ),
-                stompService = stompService,
+                appDependencies = appDependencies,
                 SharedPreferencesHelper(context, SharedPreferences.Login.name)
             )
         )

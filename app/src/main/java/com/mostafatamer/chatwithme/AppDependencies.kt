@@ -1,7 +1,10 @@
 package com.mostafatamer.chatwithme
 
-import com.mostafatamer.chatwithme.network.entity.dto.UserDto
+import com.mostafatamer.chatwithme.network.entity.dto.User
+import retrofit2.Retrofit
 
-data class AppDependencies(
-    val user: UserDto,
-)
+class AppDependencies {
+    lateinit var user: User
+    lateinit var userToken: String
+    lateinit var retrofit: Retrofit
+}

@@ -1,4 +1,4 @@
-package com.mostafatamer.chatwithme
+package com.mostafatamer.chatwithme.activities
 
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.pm.PackageManager
@@ -12,13 +12,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.compose.rememberNavController
+import com.mostafatamer.chatwithme.AppDependencies
 import com.mostafatamer.chatwithme.navigation.SetupNavGraph
 import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.ui.theme.ChatWithMeTheme
@@ -52,59 +57,52 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val stompService = StompService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         askNotificationPermission()
 
+        val appDependencies = AppDependencies()
+
         setContent {
             ChatWithMeTheme {
-                StompConnectionHandler()
                 Surface(modifier = Modifier.fillMaxSize()) {
                     SetupNavGraph(
                         rememberNavController(),
-                        stompService,
+                        appDependencies,
                     )
                 }
             }
         }
     }
+}
 
-    @Composable
-    private fun StompConnectionHandler() {
-        val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+@Composable
+fun StompConnectionHandler(stompService: StompService) {
+    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
 
-        DisposableEffect(key1 = Unit) {
-            val lifecycle = lifecycleOwner.value.lifecycle
-            val observer = LifecycleEventObserver { _, event ->
-                when (event) {
-                    Lifecycle.Event.ON_RESUME -> {
-                        println("stomp resumed")
-
-                        if (stompService.isInitialized()) {
-                            if (!stompService.isStompConnected()) {
-                                println("stomp connected")
-                                stompService.connect()
-                            }
-                        }
+    DisposableEffect(key1 = Unit) {
+        val lifecycle = lifecycleOwner.value.lifecycle
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    println("stomp resumed")
+                    if (!stompService.isStompConnected()) {
+                        println("stomp connected")
+                        stompService.connect()
                     }
-
-                    else -> {}
                 }
+
+                else -> {}
             }
+        }
 
-            lifecycle.addObserver(observer)
+        lifecycle.addObserver(observer)
 
-            onDispose {
-                lifecycle.removeObserver(observer)
-
-
-                println("stomp stopped")
-                if (stompService.isInitialized()) {
-                    stompService.disconnect()
-                }
-            }
+        onDispose {
+            lifecycle.removeObserver(observer)
+            println("stomp stopped")
+            stompService.disconnect()
         }
     }
 }

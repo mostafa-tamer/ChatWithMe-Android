@@ -11,15 +11,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.mostafatamer.chatwithme.AppDependencies
+import com.mostafatamer.chatwithme.Singleton.CurrentScreen
+import com.mostafatamer.chatwithme.Singleton.JsonConverter
+import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
+import com.mostafatamer.chatwithme.activities.StompConnectionHandler
 import com.mostafatamer.chatwithme.enumeration.Screens
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.screens.FriendChatScreen
 import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.Singleton.CurrentScreen
-import com.mostafatamer.chatwithme.Singleton.JsonConverter
-import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import com.mostafatamer.chatwithme.viewModels.friend_chat.FriendChatViewModel
 
@@ -28,16 +30,17 @@ fun FriendChatScreen(
     navBackStackEntry: NavBackStackEntry,
     rememberNavController: NavHostController,
     stompService: StompService,
+    appDependencies: AppDependencies,
 ) {
     val chatJson = navBackStackEntry.arguments?.getString("chat_dto")
     val chat = JsonConverter.getInstance().fromJson(chatJson, ChatDto::class.java)
     val context = LocalContext.current
 
-    val viewModel by getViewModel(context, stompService, chat)
+    val viewModel by getViewModel(context, stompService, chat, appDependencies)
 
     CurrentInflatedScreen(viewModel)
 
-    FriendChatScreen(viewModel, rememberNavController)
+    FriendChatScreen(viewModel, rememberNavController, appDependencies)
 }
 
 @Composable
@@ -59,6 +62,7 @@ private fun getViewModel(
     context: Context,
     stompService: StompService,
     chat: ChatDto,
+    appDependencies: AppDependencies,
 ): MutableState<FriendChatViewModel> {
     val viewModel = remember {
         mutableStateOf(
@@ -71,7 +75,8 @@ private fun getViewModel(
                     context,
                     SharedPreferences.FriendChat.name
                 ),
-                chat
+                chat,
+                appDependencies = appDependencies
             )
         )
     }

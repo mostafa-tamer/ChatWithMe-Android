@@ -2,11 +2,14 @@ package com.mostafatamer.chatwithme.enumeration
 
 sealed class WebSocketPaths(val path: String) {
     data object SendMessageRout : WebSocketPaths("/app/sendMessage") {
-        fun withChatTag(chatTag: String): String =
-            "${this.path}/$chatTag"
+//        fun withChatTag(chatTag: String): String =
+//            "${this.path}/$chatTag"
     }
 
     data object SendMessageToChatMessageBroker : WebSocketPaths("/send_message_to_chat") {
+        fun withUsername(username: String): String =
+            "${this.path}/$username"
+
         fun withChatTag(chatTag: String): String =
             "${this.path}/$chatTag"
     }

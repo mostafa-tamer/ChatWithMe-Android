@@ -1,6 +1,6 @@
 package com.mostafatamer.chatwithme.network.entity.dto
 
 data class FriendRequestDto(
-    var sender: UserDto,
+    var sender: User,
     var message: String
 )

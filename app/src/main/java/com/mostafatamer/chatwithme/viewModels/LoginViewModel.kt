@@ -1,22 +1,22 @@
 package com.mostafatamer.chatwithme.viewModels
 
-import com.mostafatamer.chatwithme.enumeration.SharedPreferences
-import com.mostafatamer.chatwithme.network.entity.authenticationDto.AuthenticationRequest
-import com.mostafatamer.chatwithme.network.entity.authenticationDto.AuthenticationResponse
-import com.mostafatamer.chatwithme.network.entity.dto.UserDto
-import com.mostafatamer.chatwithme.network.repository.UserRepository
-import com.mostafatamer.chatwithme.services.StompService
-import com.mostafatamer.chatwithme.Singleton.UserSingleton
+import com.mostafatamer.chatwithme.AppDependencies
 import com.mostafatamer.chatwithme.Singleton.JsonConverter
 import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.Singleton.StompClientSingleton
+import com.mostafatamer.chatwithme.enumeration.SharedPreferences
+import com.mostafatamer.chatwithme.network.entity.authenticationDto.AuthenticationRequest
+import com.mostafatamer.chatwithme.network.entity.authenticationDto.AuthenticationResponse
+import com.mostafatamer.chatwithme.network.entity.dto.User
+import com.mostafatamer.chatwithme.network.repository.UserRepository
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 
 class LoginViewModel(
     private val userRepository: UserRepository,
-    private val stompService: StompService,
+    private val appDependencies: AppDependencies,
     private val loginSharedPreferences: SharedPreferencesHelper,
-) : AuthenticationViewModel() {
+
+    ) : AuthenticationViewModel() {
 
     fun login(
         username: String,
@@ -40,12 +40,11 @@ class LoginViewModel(
         }
     }
 
-    private fun prepareNeededObjects(user: UserDto, token: String) {
-        UserSingleton.getInstance(user)
-        RetrofitSingleton.getInstance(token)
-        val stompClient = StompClientSingleton.getInstance(token)
-        stompService.init(stompClient)
-        stompService.connect()
+    private fun prepareNeededObjects(user: User, token: String) {
+        appDependencies.userToken = token
+        appDependencies.user = user
+        appDependencies.retrofit = RetrofitSingleton.getInstance(token)
+        StompClientSingleton.getInstance(token)
     }
 
     private fun saveUserCredentials(authenticationResponse: AuthenticationResponse) {
@@ -82,7 +81,7 @@ class LoginViewModel(
         val ninetyDays = 7_776_000_000
 
         if (currentTime - userTokenTime < ninetyDays) {
-            val user = JsonConverter.getInstance().fromJson(userJson, UserDto::class.java)!!
+            val user = JsonConverter.getInstance().fromJson(userJson, User::class.java)!!
 
             prepareNeededObjects(user, userToken)
 

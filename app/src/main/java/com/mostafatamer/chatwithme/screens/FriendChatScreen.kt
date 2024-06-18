@@ -43,10 +43,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.mostafatamer.chatwithme.enumeration.Screens
+import com.mostafatamer.chatwithme.AppDependencies
 import com.mostafatamer.chatwithme.network.entity.dto.MessageDto
-import com.mostafatamer.chatwithme.Singleton.CurrentScreen
-import com.mostafatamer.chatwithme.Singleton.UserSingleton
 import com.mostafatamer.chatwithme.utils.timeMillisConverter
 import com.mostafatamer.chatwithme.viewModels.friend_chat.FriendChatViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +52,11 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun FriendChatScreen(viewModel: FriendChatViewModel, navController: NavHostController) {
+fun FriendChatScreen(
+    viewModel: FriendChatViewModel,
+    navController: NavHostController,
+    appDependencies: AppDependencies,
+) {
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -88,9 +90,7 @@ fun FriendChatScreen(viewModel: FriendChatViewModel, navController: NavHostContr
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-
-
-                Chat(lazyListState, viewModel)
+                Chat(lazyListState, viewModel, appDependencies)
                 Spacer(modifier = Modifier.height(16.dp))
                 MessageSending(viewModel)
             }
@@ -159,6 +159,7 @@ fun Message(messageDto: MessageDto, viewModel: FriendChatViewModel, isMyMessage:
 private fun ColumnScope.Chat(
     lazyListState: LazyListState,
     viewModel: FriendChatViewModel,
+    appDependencies: AppDependencies,
 ) {
     LazyColumn(
         Modifier
@@ -168,7 +169,7 @@ private fun ColumnScope.Chat(
     ) {
         items(viewModel.messages) {
             Row {
-                val isMyMessage = it.senderUsername == UserSingleton.getInstance().username
+                val isMyMessage = it.senderUsername == appDependencies.user.username
                 if (!isMyMessage)
                     Spacer(
                         modifier = Modifier

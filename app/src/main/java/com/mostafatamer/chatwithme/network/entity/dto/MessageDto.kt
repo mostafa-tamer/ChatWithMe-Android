@@ -4,6 +4,7 @@ import lombok.Builder
 
 @Builder
 data class MessageDto(
+    var chatTag: String,
     var message: String,
     var senderUsername: String,
     var timeStamp: Long,

@@ -9,7 +9,7 @@ import ua.naiksoftware.stomp.dto.LifecycleEvent
 import ua.naiksoftware.stomp.dto.StompMessage
 
 
-class StompService {
+class StompService(private val stompClient: StompClient) {
     private val jsonConverter = Gson()
     private val completableObserver = object : CompletableObserver {
         //TODO: check if this is needed
@@ -28,15 +28,8 @@ class StompService {
 
     }
 
-    private lateinit var stompClient: StompClient
 
-    fun init(stompClient: StompClient) {
-//        if (this::stompClient.isInitialized) {
-//            this.stompClient.disconnect()
-//        }
 
-        this.stompClient = stompClient
-    }
 
     fun connect() {
         stompClient.connect()
@@ -83,5 +76,4 @@ class StompService {
         stompClient.disconnect()
     }
 
-    fun isInitialized() = ::stompClient.isInitialized
 }

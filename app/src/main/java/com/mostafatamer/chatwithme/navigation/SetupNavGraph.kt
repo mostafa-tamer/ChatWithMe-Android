@@ -9,17 +9,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mostafatamer.chatwithme.AppDependencies
 import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
+import com.mostafatamer.chatwithme.activities.StompConnectionHandler
 import com.mostafatamer.chatwithme.navigation.screens.FriendChatScreen
 import com.mostafatamer.chatwithme.navigation.screens.LoginScreen
 import com.mostafatamer.chatwithme.navigation.screens.MainScreen
 import com.mostafatamer.chatwithme.network.repository.UserRepository
 import com.mostafatamer.chatwithme.screens.SignUpScreen
 import com.mostafatamer.chatwithme.services.StompService
+import com.mostafatamer.chatwithme.utils.createStompClient
 import com.mostafatamer.chatwithme.viewModels.SignUpViewModel
 
 @Composable
-fun SetupNavGraph(navController: NavHostController, stompService: StompService) {
-
+fun SetupNavGraph(navController: NavHostController, appDependencies: AppDependencies) {
     NavHost(navController = navController, startDestination = ScreensRouts.Login.route) {
         composable(ScreensRouts.SignUp.route) {
             val viewModel by remember {
@@ -36,15 +37,23 @@ fun SetupNavGraph(navController: NavHostController, stompService: StompService) 
         }
 
         composable(ScreensRouts.Login.route) {
-            LoginScreen(navController, stompService, )
+            LoginScreen(navController, appDependencies)
         }
 
         composable(ScreensRouts.Main.route) {
-            MainScreen(navController, stompService, )
+            MainScreen(navController, appDependencies)
         }
 
         composable(ScreensRouts.FriendChatScreensRouts.route) { navBackstackEntry ->
-            FriendChatScreen(navBackstackEntry, navController, stompService)
+            val stompService by remember {
+                mutableStateOf(
+                    StompService(
+                        createStompClient(appDependencies.userToken)
+                    )
+                )
+            }
+            StompConnectionHandler(stompService)
+            FriendChatScreen(navBackstackEntry, navController, stompService, appDependencies)
         }
     }
 }

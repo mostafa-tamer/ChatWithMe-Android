@@ -1,9 +1,9 @@
 package com.mostafatamer.chatwithme.network.firebase
 
-import com.mostafatamer.chatwithme.network.entity.dto.UserDto
+import com.mostafatamer.chatwithme.network.entity.dto.User
 
 data class FriendRequest(
-    val sender: UserDto,
+    val sender: User,
     val message: String,
 )
 
