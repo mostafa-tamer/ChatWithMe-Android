@@ -21,11 +21,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,13 +85,16 @@ fun FriendChatScreen(
                 )
             }
         }
-        Column {
-            TitleBar(viewModel)
-
+        Scaffold(
+            topBar = {
+                TopBar(viewModel)
+            }
+        ) {
             Column(
                 Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
+                    .padding(it)
+                    .padding(horizontal = 16.dp)
             ) {
                 Chat(lazyListState, viewModel, appDependencies)
                 Spacer(modifier = Modifier.height(16.dp))
@@ -98,22 +104,18 @@ fun FriendChatScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TitleBar(viewModel: FriendChatViewModel) {
-    Box(
-        contentAlignment = Alignment.CenterStart,
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.primary)
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = viewModel.chatDto.friend.nickname,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-    }
+private fun TopBar(viewModel: FriendChatViewModel) {
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary),
+        title = {
+            androidx.compose.material.Text(
+                text = viewModel.chatDto.friend.nickname,
+                fontSize = 20.sp
+            )
+        },
+    )
 }
 
 @Composable

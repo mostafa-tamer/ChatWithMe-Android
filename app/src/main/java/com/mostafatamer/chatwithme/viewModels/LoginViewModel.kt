@@ -1,15 +1,14 @@
 package com.mostafatamer.chatwithme.viewModels
 
 import com.mostafatamer.chatwithme.AppDependencies
-import com.mostafatamer.chatwithme.Singleton.JsonConverter
-import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
-import com.mostafatamer.chatwithme.Singleton.StompClientSingleton
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.network.entity.authenticationDto.AuthenticationRequest
 import com.mostafatamer.chatwithme.network.entity.authenticationDto.AuthenticationResponse
 import com.mostafatamer.chatwithme.network.entity.dto.User
 import com.mostafatamer.chatwithme.network.repository.UserRepository
+import com.mostafatamer.chatwithme.utils.JsonConverter
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
+import com.mostafatamer.chatwithme.utils.getRetrofit
 
 class LoginViewModel(
     private val userRepository: UserRepository,
@@ -43,8 +42,7 @@ class LoginViewModel(
     private fun prepareNeededObjects(user: User, token: String) {
         appDependencies.userToken = token
         appDependencies.user = user
-        appDependencies.retrofit = RetrofitSingleton.getInstance(token)
-        StompClientSingleton.getInstance(token)
+        appDependencies.retrofit = getRetrofit(token)
     }
 
     private fun saveUserCredentials(authenticationResponse: AuthenticationResponse) {
@@ -54,7 +52,7 @@ class LoginViewModel(
         )
         loginSharedPreferences.setValue(
             SharedPreferences.Login.USER,
-            JsonConverter.getInstance().toJson(authenticationResponse.user)
+            JsonConverter.toJson(authenticationResponse.user)
         )
         loginSharedPreferences.setValue(
             SharedPreferences.Login.USER_TOKEN_TIME,
@@ -81,7 +79,7 @@ class LoginViewModel(
         val ninetyDays = 7_776_000_000
 
         if (currentTime - userTokenTime < ninetyDays) {
-            val user = JsonConverter.getInstance().fromJson(userJson, User::class.java)!!
+            val user = JsonConverter.fromJson(userJson, User::class.java)!!
 
             prepareNeededObjects(user, userToken)
 

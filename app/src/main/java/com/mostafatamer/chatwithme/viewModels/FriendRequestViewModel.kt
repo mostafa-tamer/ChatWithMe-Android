@@ -8,7 +8,6 @@ import com.mostafatamer.chatwithme.network.entity.dto.FriendRequestDto
 import com.mostafatamer.chatwithme.network.entity.dto.SendFriendRequestDto
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
 import com.mostafatamer.chatwithme.services.StompService
-
 class FriendRequestViewModel(
     private val friendshipRepository: FriendshipRepository,
     private val stompService: StompService,

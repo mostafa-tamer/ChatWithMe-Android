@@ -35,11 +35,11 @@ import com.mostafatamer.chatwithme.AppDependencies
 import com.mostafatamer.chatwithme.R
 import com.mostafatamer.chatwithme.navigation.ScreensRouts
 import com.mostafatamer.chatwithme.utils.timeMillisConverter
-import com.mostafatamer.chatwithme.viewModels.friendship_chat.FriendshipChatViewModel
+import com.mostafatamer.chatwithme.viewModels.friendship_chat.FriendshipChatHubViewModel
 
 @Composable
 fun FriendshipChatHub(
-    viewModel: FriendshipChatViewModel,
+    viewModel: FriendshipChatHubViewModel,
     navController: NavHostController,
     appDependencies: AppDependencies,
 ) {
@@ -55,10 +55,8 @@ fun FriendshipChatHub(
         }
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .padding(paddingValues)
+            modifier = Modifier.padding(paddingValues)
         ) {
-
             if (viewModel.chats.isEmpty()) {
                 Text(text = "No Friends In List")
             }
@@ -69,7 +67,7 @@ fun FriendshipChatHub(
 
 @Composable
 private fun Content(
-    viewModel: FriendshipChatViewModel,
+    viewModel: FriendshipChatHubViewModel,
     navController: NavHostController,
 ) {
     LazyColumn {
@@ -87,7 +85,7 @@ private fun Content(
 
 @Composable
 private fun Card(
-    chatCard: FriendshipChatViewModel.ChatCard,
+    chatCard: FriendshipChatHubViewModel.ChatCard,
     navController: NavHostController,
 ) {
     Column(
@@ -166,14 +164,14 @@ private fun Card(
 @Composable
 private fun TopBar(
     navController: NavHostController,
-    viewModel: FriendshipChatViewModel,
+    viewModel: FriendshipChatHubViewModel,
     appDependencies: AppDependencies,
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary),
         title = {
             Text(
-                text = "Welcome ${appDependencies.user.nickname}",
+                text = appDependencies.user.nickname,
                 fontSize = 20.sp
             )
         },
@@ -193,20 +191,6 @@ private fun TopBar(
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-
-//            Spacer(modifier = Modifier.width(4.dp))
-//
-//            IconButton(onClick = { navController.navigate(ScreensRouts.FriendRequests.route) }) {
-//                Icon(
-//                    imageVector = Icons.Filled.Person, contentDescription = null,
-//                    tint = MaterialTheme.colorScheme.onPrimary
-//                )
-//
-//                Text(
-//                    text = viewModel.numberOfFriendRequests.toString(),
-//                    color = Color.Red
-//                )
-//            }
         }
     )
 

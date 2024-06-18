@@ -9,12 +9,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.mostafatamer.chatwithme.AppDependencies
-import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.navigation.ScreensRouts
 import com.mostafatamer.chatwithme.network.repository.UserRepository
 import com.mostafatamer.chatwithme.screens.LoginScreen
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
+import com.mostafatamer.chatwithme.utils.getRetrofit
 import com.mostafatamer.chatwithme.viewModels.LoginViewModel
 
 
@@ -28,9 +28,7 @@ fun LoginScreen(
     val viewModel by remember {
         mutableStateOf(
             LoginViewModel(
-                UserRepository(
-                    RetrofitSingleton.getInstance()
-                ),
+                UserRepository(getRetrofit()),
                 appDependencies = appDependencies,
                 SharedPreferencesHelper(context, SharedPreferences.Login.name)
             )

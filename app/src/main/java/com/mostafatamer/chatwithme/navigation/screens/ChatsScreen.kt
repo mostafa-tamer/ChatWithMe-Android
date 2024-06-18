@@ -3,39 +3,43 @@ package com.mostafatamer.chatwithme.navigation.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mostafatamer.chatwithme.AppDependencies
-import com.mostafatamer.chatwithme.Singleton.RetrofitSingleton
 import com.mostafatamer.chatwithme.activities.StompConnectionHandler
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.navigation.MainScreenRouts
 import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
+import com.mostafatamer.chatwithme.screens.FriendChatScreen
+import com.mostafatamer.chatwithme.screens.FriendRequestsScreen
 import com.mostafatamer.chatwithme.screens.FriendshipChatHub
 import com.mostafatamer.chatwithme.screens.components.BottomNavigationBar
 import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
-import com.mostafatamer.chatwithme.utils.createStompClient
-import com.mostafatamer.chatwithme.viewModels.friendship_chat.FriendshipChatViewModel
+import com.mostafatamer.chatwithme.utils.getStompClient
+import com.mostafatamer.chatwithme.viewModels.FriendRequestViewModel
+import com.mostafatamer.chatwithme.viewModels.friendship_chat.FriendshipChatHubViewModel
 
 
 @Composable
 fun MainScreen(
-    rememberNavController: NavHostController,
+    navController: NavHostController,
     appDependencies: AppDependencies,
 ) {
     val mainNavController = rememberNavController()
-
+    val context = LocalContext.current
 
     Scaffold(
         bottomBar = {
@@ -51,65 +55,70 @@ fun MainScreen(
                     val stompService by remember {
                         mutableStateOf(
                             StompService(
-                                createStompClient(appDependencies.userToken)
+                                getStompClient(appDependencies.userToken)
                             )
                         )
                     }
 
+                    val viewModel by remember {
+                        mutableStateOf(
+                            FriendshipChatHubViewModel(
+                                ChatRepository(
+                                    appDependencies.retrofit
+                                ),
+                                FriendshipRepository(
+                                    appDependencies.retrofit
+                                ),
+                                stompService,
+                                SharedPreferencesHelper(
+                                    context,
+                                    SharedPreferences.FriendChat.name
+                                ),
+                                SharedPreferencesHelper(
+                                    context,
+                                    SharedPreferences.Login.name
+                                ),
+                                appDependencies = appDependencies
+                            )
+                        )
+                    }
+
+
+
                     StompConnectionHandler(stompService)
 
-                    val viewModel by getViewModel(stompService, appDependencies)
-                    FriendshipChatHub(viewModel, rememberNavController, appDependencies)
+                    FriendshipChatHub(viewModel, navController, appDependencies)
                 }
                 composable(route = MainScreenRouts.GroupChat.route) {
-
+                    Text("GroupChat")
                 }
 
                 composable(route = MainScreenRouts.FriendShip.route) {
+
                     val stompService by remember {
                         mutableStateOf(
                             StompService(
-                                createStompClient(appDependencies.userToken)
+                                getStompClient(appDependencies.userToken)
+                            )
+                        )
+                    }
+
+                    val viewModel by remember {
+                        mutableStateOf(
+                            FriendRequestViewModel(
+                                FriendshipRepository(
+                                    appDependencies.retrofit
+                                ),
+                                stompService,
+                                appDependencies
                             )
                         )
                     }
 
                     StompConnectionHandler(stompService)
-                    FriendRequestsScreen(mainNavController, stompService, appDependencies)
+                    FriendRequestsScreen(viewModel, navController)
                 }
             }
         }
     }
-}
-
-@Composable
-private fun getViewModel(
-    stompService: StompService,
-    appDependencies: AppDependencies,
-): MutableState<FriendshipChatViewModel> {
-    val context = LocalContext.current
-
-    val viewModel = remember {
-        mutableStateOf(
-            FriendshipChatViewModel(
-                ChatRepository(
-                    RetrofitSingleton.getInstance()
-                ),
-                FriendshipRepository(
-                    RetrofitSingleton.getInstance()
-                ),
-                stompService,
-                SharedPreferencesHelper(
-                    context,
-                    SharedPreferences.FriendChat.name
-                ),
-                SharedPreferencesHelper(
-                    context,
-                    SharedPreferences.Login.name
-                ),
-                appDependencies = appDependencies
-            )
-        )
-    }
-    return viewModel
 }

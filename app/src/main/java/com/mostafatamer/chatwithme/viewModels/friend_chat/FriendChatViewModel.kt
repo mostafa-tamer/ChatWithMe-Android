@@ -10,7 +10,6 @@ import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 
-
 class FriendChatViewModel(
     private val chatRepository: ChatRepository,
     private val stompService: StompService,

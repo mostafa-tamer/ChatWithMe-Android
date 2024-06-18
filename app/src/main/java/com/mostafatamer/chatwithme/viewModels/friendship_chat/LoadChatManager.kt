@@ -4,10 +4,10 @@ import com.mostafatamer.chatwithme.AppDependencies
 import com.mostafatamer.chatwithme.enumeration.SharedPreferences
 import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
 import com.mostafatamer.chatwithme.network.entity.dto.MessageDto
-import com.mostafatamer.chatwithme.viewModels.friendship_chat.FriendshipChatViewModel.ChatCard
+import com.mostafatamer.chatwithme.viewModels.friendship_chat.FriendshipChatHubViewModel.ChatCard
 
 class LoadChatManager(
-    private val friendChatViewModel: FriendshipChatViewModel,
+    private val friendChatViewModel: FriendshipChatHubViewModel,
     private val appDependencies: AppDependencies,
 ) {
 

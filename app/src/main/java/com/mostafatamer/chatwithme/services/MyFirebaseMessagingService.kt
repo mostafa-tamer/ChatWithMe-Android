@@ -17,7 +17,7 @@ import com.mostafatamer.chatwithme.network.firebase.AcceptFriendRequest
 import com.mostafatamer.chatwithme.network.firebase.Chat
 import com.mostafatamer.chatwithme.network.firebase.FriendRequest
 import com.mostafatamer.chatwithme.Singleton.CurrentScreen
-import com.mostafatamer.chatwithme.Singleton.JsonConverter
+import com.mostafatamer.chatwithme.utils.JsonConverter
 import org.json.JSONObject
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -45,7 +45,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun acceptFriendRequest(jsonData: String) {
-        val friendRequest = JsonConverter.getInstance()
+        val friendRequest = JsonConverter
             .fromJson(jsonData, AcceptFriendRequest::class.java)
 
         val appName = baseContext.getString(R.string.app_name)
@@ -57,7 +57,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun friendRequest(jsonData: String) {
-        val friendRequest = JsonConverter.getInstance()
+        val friendRequest = JsonConverter
             .fromJson(jsonData, FriendRequest::class.java)
 
         sendNotification(
@@ -67,7 +67,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun chatMessage(jsonData: String) {
-        val chat = JsonConverter.getInstance()
+        val chat = JsonConverter
             .fromJson(jsonData, Chat::class.java)
 
         val currentScreen = CurrentScreen.screen as? Screens.ChatsScreen

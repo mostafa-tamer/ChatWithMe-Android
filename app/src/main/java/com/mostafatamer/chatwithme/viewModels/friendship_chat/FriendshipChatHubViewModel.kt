@@ -1,5 +1,6 @@
 package com.mostafatamer.chatwithme.viewModels.friendship_chat
 
+import android.view.View
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -15,8 +16,7 @@ import com.mostafatamer.chatwithme.network.repository.ChatRepository
 import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
 import com.mostafatamer.chatwithme.services.StompService
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
-
-class FriendshipChatViewModel(
+class FriendshipChatHubViewModel(
     private val chatRepository: ChatRepository,
     private val friendshipRepository: FriendshipRepository,
     private val stompService: StompService,
