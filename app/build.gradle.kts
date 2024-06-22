@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.android.application")
+    kotlin("android")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
-
-
 }
 
 android {
@@ -62,7 +62,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("org.projectlombok:lombok:1.18.28")
+    implementation(libs.lombok)
     implementation(libs.firebase.messaging)
     implementation(libs.androidx.room.common)
     testImplementation(libs.junit)
@@ -73,20 +73,24 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    api("com.github.NaikSoftware:StompProtocolAndroid:1.6.4")
-    api("io.reactivex.rxjava2:rxjava:2.2.5")
+    api(libs.stompprotocolandroid)
+    api(libs.rxjava)
 
-    implementation("androidx.compose.ui:ui:1.6.5")
+    implementation("androidx.compose.ui:ui:1.6.8")
     implementation("androidx.compose.material:material:1.6.5")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
 
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
 
-    val roomVersion = "2.6.1"
+    // Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
 
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
 }

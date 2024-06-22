@@ -9,7 +9,7 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.mostafatamer.chatwithme.activities.MainActivity
+import com.mostafatamer.chatwithme.main_activity.MainActivity
 import com.mostafatamer.chatwithme.R
 import com.mostafatamer.chatwithme.enumeration.Screens
 import com.mostafatamer.chatwithme.network.entity.MessageType

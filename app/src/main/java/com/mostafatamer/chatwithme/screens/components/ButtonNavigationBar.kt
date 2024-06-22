@@ -1,8 +1,6 @@
 package com.mostafatamer.chatwithme.screens.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
@@ -19,7 +17,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.mostafatamer.chatwithme.R
-import com.mostafatamer.chatwithme.navigation.MainScreenRouts
+import com.mostafatamer.chatwithme.screens.main_screen.Routs
 
 data class BarItem(
     val title: String,
@@ -31,17 +29,17 @@ object NavBarItems {
     val items = listOf(
         BarItem(
             title = "Friends",
-            route = MainScreenRouts.FriendsChat.route,
+            route = Routs.FriendsChat.route,
             drawable = R.drawable.chat_round_line_svgrepo_com,
         ),
         BarItem(
             title = "Groups",
-            route = MainScreenRouts.GroupChat.route,
+            route = Routs.GroupChat.route,
             drawable = R.drawable.groups_svgrepo_com,
         ),
         BarItem(
             title = "Friendship",
-            route = MainScreenRouts.FriendShip.route,
+            route = Routs.FriendShip.route,
             drawable = R.drawable.friend_svgrepo_com,
         ),
     )

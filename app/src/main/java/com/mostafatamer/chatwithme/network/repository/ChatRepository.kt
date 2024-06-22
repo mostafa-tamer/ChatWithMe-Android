@@ -8,13 +8,13 @@ import retrofit2.Retrofit
 class ChatRepository(retrofit: Retrofit) {
     private val apiService = retrofit.create(ChatApiService::class.java)
 
-    fun allFriendshipChat() = CallDecorator(apiService.allChats())
+    fun allFriendshipChat(page: Int, size: Int) = CallDecorator(apiService.allChats(page, size))
 
     fun loadFriendChat(chatTag: String) = CallDecorator(apiService.loadFriendChat(chatTag))
 
     fun loadChatsLastMessageNumber(chatTags: List<String>) =
         CallDecorator(apiService.loadChatsLastMessageNumber(chatTags))
 
- fun loadChatLastMessageNumber(chatTag: String) =
+    fun loadChatLastMessageNumber(chatTag: String) =
         CallDecorator(apiService.loadChatLastMessageNumber(chatTag))
 }
