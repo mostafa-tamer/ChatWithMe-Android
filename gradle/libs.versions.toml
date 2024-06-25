@@ -18,6 +18,7 @@ roomCommon = "2.6.1"
 roomVersion = "2.6.1"
 stompprotocolandroid = "1.6.4"
 rxjava = "2.2.5"
+googleGmsGoogleServices = "4.4.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,4 +52,5 @@ stompprotocolandroid = { module = "com.github.NaikSoftware:StompProtocolAndroid"
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 

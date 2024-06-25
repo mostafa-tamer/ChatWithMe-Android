@@ -20,12 +20,12 @@ object RepositoryModule {
     }
 
     @Provides
-    fun provideChatRepository(retrofit: Retrofit): ChatRepository {
+    fun provideChatRepository(@Named("retrofit") retrofit: Retrofit): ChatRepository {
         return ChatRepository(retrofit)
     }
 
     @Provides
-    fun provideFriendshipRepository(retrofit: Retrofit): FriendshipRepository {
+    fun provideFriendshipRepository(@Named("retrofit") retrofit: Retrofit): FriendshipRepository {
         return FriendshipRepository(retrofit)
     }
 }

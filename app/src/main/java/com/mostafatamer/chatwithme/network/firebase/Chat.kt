@@ -1,9 +1,9 @@
 package com.mostafatamer.chatwithme.network.firebase
 
-import com.mostafatamer.chatwithme.network.entity.dto.ChatDto
+import com.mostafatamer.chatwithme.network.entity.dto.Chat
 
-data class Chat(
+data class FirebaseChat(
     val title: String,
     val message: String,
-    val chatDto: ChatDto
+    val chat: Chat
 )

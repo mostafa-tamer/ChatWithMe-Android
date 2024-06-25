@@ -52,7 +52,7 @@ object NetworkModule {
     }
 
     @Provides
-    @Singleton
+    @Named("retrofit")
     fun provideRetrofit(
         @Named("baseUrl") baseUrl: String,
         gson: Gson,
@@ -67,7 +67,6 @@ object NetworkModule {
 
     @Provides
     @Named("retrofit_no_headers")
-    @Singleton
     fun provideRetrofitNoHeaders(
         @Named("baseUrl") baseUrl: String,
         gson: Gson,
@@ -79,8 +78,8 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideStompService(stompClient: StompClient): StompService {
-        return StompService(stompClient)
+    fun provideStompService(stompClient: StompClient, gson: Gson): StompService {
+        return StompService(stompClient, gson)
     }
 
     @Provides
@@ -90,7 +89,8 @@ object NetworkModule {
     ): StompClient {
         return Stomp.over(
             Stomp.ConnectionProvider.OKHTTP,
-            wsUrl, mutableMapOf("Authorization" to token)
+            wsUrl,
+            mutableMapOf("Authorization" to token)
         )
     }
 

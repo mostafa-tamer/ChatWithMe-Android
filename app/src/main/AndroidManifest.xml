@@ -25,16 +25,6 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".main_activity.LoginActivity"
-            android:theme="@style/Theme.ChatWithMe"
-            android:windowSoftInputMode="adjustResize" />
-
-        <activity
-            android:name=".main_activity.SignupActivity"
-            android:theme="@style/Theme.ChatWithMe"
-            android:windowSoftInputMode="adjustResize" />
-
 
         <activity
             android:name=".main_activity.MainActivity"

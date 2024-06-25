@@ -9,7 +9,7 @@ sealed class SharedPreferencesConstants(val name: String) {
         }
     }
 
-    data object Login : SharedPreferencesConstants("auth") {
+    data object Authentication : SharedPreferencesConstants("auth") {
         const val USER = "user"
         const val USER_TOKEN = "user_token"
         const val USER_TOKEN_TIME = "user_token_time"

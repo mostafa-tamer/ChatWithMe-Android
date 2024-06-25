@@ -63,8 +63,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.lombok)
-    implementation(libs.firebase.messaging)
+
     implementation(libs.androidx.room.common)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -76,6 +77,16 @@ dependencies {
     api(libs.stompprotocolandroid)
     api(libs.rxjava)
 
+//    implementation ("ua.naiksoftware:stomp:2.5.4")
+
+//    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
+//    implementation ("io.reactivex.rxjava3:rxjava:3.1.0")
+
+    implementation("androidx.work:work-runtime:2.7.1")
+
+    implementation("androidx.paging:paging-runtime:3.1.1")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
+
     implementation("androidx.compose.ui:ui:1.6.8")
     implementation("androidx.compose.material:material:1.6.5")
     implementation("androidx.navigation:navigation-compose:2.7.7")
@@ -86,10 +97,13 @@ dependencies {
 
 
     // Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
-
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    val daggerVersion = "2.48"
+    val hiltVersion = "1.2.0-alpha01"
+    implementation("com.google.dagger:hilt-android:$daggerVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
+    implementation("androidx.hilt:hilt-work:$hiltVersion")
+    kapt("androidx.hilt:hilt-compiler:$hiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:$hiltVersion")
 
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)

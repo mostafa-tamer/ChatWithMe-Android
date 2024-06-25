@@ -31,17 +31,6 @@ object SharedPreferencesModule {
     @Singleton
     @Named("login_shared_preferences")
     fun provideLoginSharedPreferences(application: Application): SharedPreferencesHelper {
-        return SharedPreferencesHelper(application, SharedPreferencesConstants.Login.name)
-    }
-
-    @Provides
-    @Singleton
-    fun user(
-        @Named("login_shared_preferences")
-        sharedPreferencesHelper: SharedPreferencesHelper,
-        gson: Gson,
-    ): User {
-        val userJson = sharedPreferencesHelper.getString(SharedPreferencesConstants.Login.USER)!!
-        return gson.fromJson(userJson, User::class.java)
+        return SharedPreferencesHelper(application, SharedPreferencesConstants.Authentication.name)
     }
 }

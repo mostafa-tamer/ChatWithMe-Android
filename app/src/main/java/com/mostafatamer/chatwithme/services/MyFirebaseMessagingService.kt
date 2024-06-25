@@ -9,18 +9,24 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.mostafatamer.chatwithme.main_activity.MainActivity
+import com.google.gson.Gson
 import com.mostafatamer.chatwithme.R
+import com.mostafatamer.chatwithme.Singleton.CurrentScreen
 import com.mostafatamer.chatwithme.enumeration.Screens
+import com.mostafatamer.chatwithme.main_activity.MainActivity
 import com.mostafatamer.chatwithme.network.entity.MessageType
 import com.mostafatamer.chatwithme.network.firebase.AcceptFriendRequest
-import com.mostafatamer.chatwithme.network.firebase.Chat
+import com.mostafatamer.chatwithme.network.firebase.FirebaseChat
 import com.mostafatamer.chatwithme.network.firebase.FriendRequest
-import com.mostafatamer.chatwithme.Singleton.CurrentScreen
-import com.mostafatamer.chatwithme.utils.JsonConverter
+import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
+import javax.inject.Inject
 
-class MyFirebaseMessagingService : FirebaseMessagingService() {
+@AndroidEntryPoint
+class MyFirebaseMessagingService() : FirebaseMessagingService() {
+
+    @Inject
+    lateinit var jsonConverter: Gson
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         val payload = remoteMessage.data["cloud_message"]!!
@@ -45,7 +51,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun acceptFriendRequest(jsonData: String) {
-        val friendRequest = JsonConverter
+        val friendRequest = jsonConverter
             .fromJson(jsonData, AcceptFriendRequest::class.java)
 
         val appName = baseContext.getString(R.string.app_name)
@@ -57,7 +63,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun friendRequest(jsonData: String) {
-        val friendRequest = JsonConverter
+        val friendRequest = jsonConverter
             .fromJson(jsonData, FriendRequest::class.java)
 
         sendNotification(
@@ -67,13 +73,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun chatMessage(jsonData: String) {
-        val chat = JsonConverter
-            .fromJson(jsonData, Chat::class.java)
+        val chat = jsonConverter
+            .fromJson(jsonData, FirebaseChat::class.java)
 
         val currentScreen = CurrentScreen.screen as? Screens.ChatsScreen
 
         val isLegalToPushNotification =
-            currentScreen?.chatTag != chat.chatDto.tag
+            currentScreen?.chatTag != chat.chat.tag
 
         if (isLegalToPushNotification) {
             sendNotification(chat.title, chat.message)
