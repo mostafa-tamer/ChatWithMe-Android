@@ -1,9 +1,7 @@
 package com.mostafatamer.chatwithme.dependency_injection
 
 import android.app.Application
-import com.google.gson.Gson
-import com.mostafatamer.chatwithme.enumeration.SharedPreferencesConstants
-import com.mostafatamer.chatwithme.network.entity.dto.User
+import com.mostafatamer.chatwithme.sealed.SharedPreferencesConstants
 import com.mostafatamer.chatwithme.utils.SharedPreferencesHelper
 import dagger.Module
 import dagger.Provides

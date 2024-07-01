@@ -1,7 +1,5 @@
 package com.mostafatamer.chatwithme.presentation.navigation
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -17,16 +15,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.gson.Gson
-import com.mostafatamer.chatwithme.Singleton.CurrentScreen
-import com.mostafatamer.chatwithme.enumeration.Screens
-import com.mostafatamer.chatwithme.network.entity.dto.Chat
-import com.mostafatamer.chatwithme.presentation.friend_chat.FriendChatScreen
-import com.mostafatamer.chatwithme.presentation.friend_chat.view_model.ChatViewModel
-import com.mostafatamer.chatwithme.presentation.login_screen.LoginScreen
-import com.mostafatamer.chatwithme.presentation.login_screen.LoginViewModel
-import com.mostafatamer.chatwithme.presentation.main_screen.navigation.MainScreen
-import com.mostafatamer.chatwithme.presentation.signup_screen.SignUpScreen
-import com.mostafatamer.chatwithme.presentation.signup_screen.SignUpViewModel
+import com.mostafatamer.chatwithme.CurrentScreen
+import com.mostafatamer.chatwithme.sealed.Screens
+import com.mostafatamer.chatwithme.domain.model.dto.dto.Chat
+import com.mostafatamer.chatwithme.presentation.screens.main_screen.navigation.MainScreen
+import com.mostafatamer.chatwithme.presentation.screens.FriendChatScreen
+import com.mostafatamer.chatwithme.presentation.screens.GroupChatScreen
+import com.mostafatamer.chatwithme.presentation.screens.LoginScreen
+import com.mostafatamer.chatwithme.presentation.screens.SignUpScreen
+import com.mostafatamer.chatwithme.presentation.viewmodels.FriendshipChatViewModel
+import com.mostafatamer.chatwithme.presentation.viewmodels.GroupChatViewModel
+import com.mostafatamer.chatwithme.presentation.viewmodels.LoginViewModel
+import com.mostafatamer.chatwithme.presentation.viewmodels.SignUpViewModel
 import com.mostafatamer.chatwithme.utils.RealtimeLifeCycle
 
 @Composable
@@ -39,22 +39,21 @@ fun NavGraph(navController: NavHostController) {
         },
         exitTransition = {
             fadeOut(animationSpec = tween(750))
-
         },
-        popEnterTransition = {
-            fadeIn(animationSpec = tween(750))
-
-        },
-        popExitTransition = {
-            fadeOut(animationSpec = tween(750))
-        }
+//        popEnterTransition = {
+//            fadeIn(animationSpec = tween(750))
+//
+//        },
+//        popExitTransition = {
+//            fadeOut(animationSpec = tween(750))
+//        }
     ) {
         composable(Routs.SignUp.route) {
             val viewModel = hiltViewModel<SignUpViewModel>()
             SignUpScreen(viewModel, navController)
         }
 
-        composable(Routs.Login.route) {
+        composable(route = Routs.Login.route) {
             val viewModel = hiltViewModel<LoginViewModel>()
             var legalToLoginScreen by remember { mutableStateOf(false) }
 
@@ -79,16 +78,11 @@ fun NavGraph(navController: NavHostController) {
             MainScreen(navController)
         }
 
-        composable(Routs.FriendChatRouts.route) { navBackstackEntry ->
+        composable(Routs.FriendChat.route) { navBackstackEntry ->
             val chatJson = navBackstackEntry.arguments?.getString("chat_dto")
             val chat = Gson().fromJson(chatJson, Chat::class.java)
-
-//            val userJson = sharedPreferencesHelper.getString(SharedPreferencesConstants.Authentication.USER)!!
-//
-//            gson.fromJson(userJson, User::class.java)
-
-            val viewModel = hiltViewModel<ChatViewModel>()
-            viewModel.init(chat)
+            val viewModel = hiltViewModel<FriendshipChatViewModel>()
+            viewModel.chat = chat
 
             LaunchedEffect(viewModel) {
                 CurrentScreen.screen = Screens.ChatsScreen.apply {
@@ -96,15 +90,38 @@ fun NavGraph(navController: NavHostController) {
                 }
             }
 
-            DisposableEffect(key1 = Unit) {
+            DisposableEffect(Unit) {
                 onDispose {
                     CurrentScreen.screen = null
                 }
             }
 
-            RealtimeLifeCycle(viewModel)
+            RealtimeLifeCycle(viewModel.stompLifecycleManager)
 
             FriendChatScreen(viewModel, navController)
+        }
+
+        composable(Routs.GroupChat.route) { navBackstackEntry ->
+            val chatJson = navBackstackEntry.arguments?.getString("chat_dto")
+            val chat = Gson().fromJson(chatJson, Chat::class.java)
+            val viewModel = hiltViewModel<GroupChatViewModel>()
+            viewModel.chat = chat
+
+            LaunchedEffect(viewModel) {
+                CurrentScreen.screen = Screens.ChatsScreen.apply {
+                    chatTag = chat.tag
+                }
+            }
+
+            DisposableEffect(Unit) {
+                onDispose {
+                    CurrentScreen.screen = null
+                }
+            }
+
+            RealtimeLifeCycle(viewModel.stompLifecycleManager)
+
+            GroupChatScreen(viewModel, navController)
         }
     }
 }

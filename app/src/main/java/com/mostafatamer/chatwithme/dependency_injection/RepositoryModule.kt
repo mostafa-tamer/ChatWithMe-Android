@@ -1,8 +1,11 @@
 package com.mostafatamer.chatwithme.dependency_injection
 
-import com.mostafatamer.chatwithme.network.repository.AuthenticationRepository
-import com.mostafatamer.chatwithme.network.repository.ChatRepository
-import com.mostafatamer.chatwithme.network.repository.FriendshipRepository
+import com.mostafatamer.chatwithme.data.repository.realtime.StompRepository
+import com.mostafatamer.chatwithme.domain.model.dto.dto.UserDto
+import com.mostafatamer.chatwithme.data.repository.restful.AuthenticationRepository
+import com.mostafatamer.chatwithme.data.repository.restful.ChatRepository
+import com.mostafatamer.chatwithme.data.repository.restful.FriendshipRepository
+import com.mostafatamer.chatwithme.data.services.StompService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,5 +30,10 @@ object RepositoryModule {
     @Provides
     fun provideFriendshipRepository(@Named("retrofit") retrofit: Retrofit): FriendshipRepository {
         return FriendshipRepository(retrofit)
+    }
+
+    @Provides
+    fun provideStompChatRepository(userDto: UserDto, stompService: StompService): StompRepository {
+        return StompRepository(userDto, stompService)
     }
 }

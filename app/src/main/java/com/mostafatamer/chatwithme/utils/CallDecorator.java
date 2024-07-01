@@ -80,8 +80,9 @@ public class CallDecorator<T> {
         CallDecorator.onBusy = onBusy;
     }
 
-    public void setLoadingObserver(LoadingObserver loadingObserver) {
+    public CallDecorator<T> setLoadingObserver(LoadingObserver loadingObserver) {
         this.loadingObserver = loadingObserver;
+        return this;
     }
 
     public static void setStaticLoadingObserver(LoadingObserver loadingObserver) {

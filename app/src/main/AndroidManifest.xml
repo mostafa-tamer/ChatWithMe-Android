@@ -9,16 +9,16 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/chat_round_line_svgrepo_com__1_"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/chat_round_line_svgrepo_com__1_"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatWithMe"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <service
-            android:name=".services.MyFirebaseMessagingService"
+            android:name=".data.services.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -27,7 +27,7 @@
 
 
         <activity
-            android:name=".main_activity.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ChatWithMe"
             android:windowSoftInputMode="adjustResize">

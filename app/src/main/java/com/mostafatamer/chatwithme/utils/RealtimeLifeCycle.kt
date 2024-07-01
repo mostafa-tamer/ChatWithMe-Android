@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import com.mostafatamer.chatwithme.presentation.abstract_view_models.StompViewModel
+import com.mostafatamer.chatwithme.presentation.viewmodels.abstract_view_models.StompLifecycleManager
 
 @Composable
-fun RealtimeLifeCycle(stompService: StompViewModel) {
+fun RealtimeLifeCycle(stompService: StompLifecycleManager) {
     val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
 
     DisposableEffect(Unit) {
@@ -17,7 +17,6 @@ fun RealtimeLifeCycle(stompService: StompViewModel) {
 
         onDispose {
             lifecycle.removeObserver(stompService)
-            stompService.disconnect()
         }
     }
 }

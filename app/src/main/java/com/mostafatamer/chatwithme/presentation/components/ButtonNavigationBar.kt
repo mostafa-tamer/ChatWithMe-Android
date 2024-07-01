@@ -17,7 +17,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.mostafatamer.chatwithme.R
-import com.mostafatamer.chatwithme.presentation.main_screen.Routs
+import com.mostafatamer.chatwithme.presentation.screens.main_screen.navigation.Routs
 
 data class BarItem(
     val title: String,
