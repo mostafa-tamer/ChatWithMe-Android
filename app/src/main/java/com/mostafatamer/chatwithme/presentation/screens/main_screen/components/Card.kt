@@ -28,7 +28,8 @@ import com.mostafatamer.chatwithme.utils.timeMillisConverter
 @Composable
 fun Card(
     chatCard: ChatCard,
-    text: String,
+    chatName: String,
+    lastMessage: String,
     onClick: () -> Unit,
 ) {
     Column(
@@ -41,7 +42,7 @@ fun Card(
     ) {
         Row {
             Text(
-                text = text,
+                text = chatName,
                 fontSize = 20.sp,
                 maxLines = 1,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -62,18 +63,16 @@ fun Card(
         }
 
         Row {
-            chatCard.chat.lastMessage?.let {
-                Text(
-                    text = it.message,
-                    fontSize = 16.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .weight(1f)
-                )
-            }
+            Text(
+                text = lastMessage,
+                fontSize = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .weight(1f)
+            )
 
             if (chatCard.missingMessages != null && chatCard.missingMessages!! > 0) {
                 Surface(shape = CircleShape) {

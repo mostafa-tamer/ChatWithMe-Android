@@ -8,11 +8,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 
 @Composable
-fun OutlinedTextFieldFullWidth(text: MutableState<String>) {
+fun OutlinedTextFieldFullWidth(text: MutableState<String>, labelText: String) {
     OutlinedTextField(
         value = text.value,
         modifier = Modifier.fillMaxWidth(),
-        label = { Text(text = "Username") },
+        label = { Text(text =labelText) },
         onValueChange = {
             text.value = it
         }

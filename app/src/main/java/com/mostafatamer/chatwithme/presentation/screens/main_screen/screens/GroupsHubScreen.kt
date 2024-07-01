@@ -32,11 +32,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.mostafatamer.chatwithme.presentation.components.OutlinedTextFieldFullWidth
 import com.mostafatamer.chatwithme.presentation.components.EmptyList
+import com.mostafatamer.chatwithme.presentation.components.OutlinedTextFieldFullWidth
+import com.mostafatamer.chatwithme.presentation.navigation.Routs
 import com.mostafatamer.chatwithme.presentation.screens.main_screen.components.Card
 import com.mostafatamer.chatwithme.presentation.screens.main_screen.viewmodels.GroupsHubViewmodel
-import com.mostafatamer.chatwithme.presentation.navigation.Routs
 import com.mostafatamer.chatwithme.utils.paginationConfiguration
 import com.mostafatamer.chatwithme.utils.showToast
 
@@ -94,7 +94,15 @@ private fun Content(
 
     LazyColumn {
         items(viewModel.chats) { chatCard ->
-            Card(chatCard, chatCard.chat.groupName ?: "") {
+            Card(
+                chatCard,
+                chatCard.chat.groupName ?: "",
+                lastMessage = if (chatCard.chat.lastMessage != null) {
+                    "${chatCard.chat.lastMessage!!.sender.nickname}: ${chatCard.chat.lastMessage!!.message}"
+                } else {
+                    ""
+                }
+            ) {
                 navController.navigate(
                     Routs.GroupChat.withFriend(
                         chatCard.chat
@@ -161,7 +169,7 @@ fun CreateGroupAlertDialog(
     AlertDialog(
         title = { Text(text = "Create Group") },
         text = {
-            OutlinedTextFieldFullWidth(groupName)
+            OutlinedTextFieldFullWidth(groupName, "Group name")
         },
         onDismissRequest = { groupName.value = "" },
         confirmButton = {

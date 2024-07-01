@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.mostafatamer.chatwithme.R
+import com.mostafatamer.chatwithme.presentation.navigation.Routs
 import com.mostafatamer.chatwithme.presentation.screens.main_screen.components.Card
 import com.mostafatamer.chatwithme.presentation.screens.main_screen.viewmodels.FriendshipHubViewModel
-import com.mostafatamer.chatwithme.presentation.navigation.Routs
 import com.mostafatamer.chatwithme.utils.paginationConfiguration
 
 
@@ -87,7 +87,7 @@ private fun Content(
                 chatCard.chat.members.firstOrNull { it.username != viewModel.user.username }?.nickname
                     ?: "null"
 
-            Card(chatCard, cardName) {
+            Card(chatCard, cardName, chatCard.chat.lastMessage?.message ?: "") {
                 navController.navigate(
                     Routs.FriendChat.withFriend(
                         chatCard.chat
