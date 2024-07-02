@@ -1,4 +1,4 @@
-# ChatWithMe Android-Spring Boot Chat Application
+# Chat With Me Android-Spring Boot Chat Application
 
 This project is an Android-Spring Boot chat application that provides authentication, user management, friendship, chats, and group functionalities. It integrates REST API and Web Sockets for real-time interactions and utilizes FCM for background push notifications.
 
