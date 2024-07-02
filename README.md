@@ -1,72 +1,85 @@
-Android-Spring Boot chat app with Authentication, User Management, Friendship, Chats, and Groups.
-Integrates REST API and Web Sockets for real-time interactions.Utilizes FCM for background push notifications.
+# ChatWithMe Android-Spring Boot Chat Application
 
-Backend Repository: https://github.com/mostafa-tamer/ChatWithMe.git
+This project is an Android-Spring Boot chat application that provides authentication, user management, friendship, chats, and group functionalities. It integrates REST API and Web Sockets for real-time interactions and utilizes FCM for background push notifications.
 
-@ Technologies
-  1) Jetpack Compose
-  2) Clean architecture (MVVM, UseCase, Repository)
-  3) Realtime Communication (Simple Text Oriented Messaging Protocol)
-  4) Rest Api (Retrofit)
-  5) Dependency Injection (Dagger Hilt)
-  6) Firebase Cloud Messaging
-  7) Pagination
-  8) Shared Preferences
-  9) Notifications
+## Backend Repository
 
-@ Functional Specification
-  - Login
-      1) User enters his username and password
-          * If it is correct it authenticates else show an error message
-      2) User can sign up if no account is already registered
-      3) User credentials saved if the login succeed     
+[ChatWithMe Backend Repository](https://github.com/mostafa-tamer/ChatWithMe.git)
 
-  - Sign Up
-      1) Enters the nickname and username and password and confirms the password
-      2) Error message appears when the password in the password field does not match with password in the confirm password field
-      3) User can login if he already has an account
+## Technologies
 
-  - Friendship hub (Chats of friends)
-      1) Friends' chats are loaded with:
-          * The last message
-          * The time of the last message
-          * A missing messages indicator
-      2) Observe if a new chat is added due to an acceptance of a friend request
-      3) Observe if a message was received from a friend
-      4) If a friend removed the user, the chat of this friend is removed
-      5) User can logout
+- **Jetpack Compose**
+- **Clean Architecture (MVVM, UseCase, Repository)**
+- **Real-time Communication (Simple Text Oriented Messaging Protocol)**
+- **REST API (Retrofit)**
+- **Dependency Injection (Dagger Hilt)**
+- **Firebase Cloud Messaging**
+- **Pagination**
+- **Shared Preferences**
+- **Notifications**
 
-  - Friendship chat
-      1) Chat messages is loaded
-      2) Observe for new message to receive
-      3) Send message to the friend
-      4) User can remove the friend and automatic navigate up (a confirmation dialog appears)
+## Functional Specification
 
-  - Group hub (Chats of the joined groups)
-      1) Groups' chats are loaded with:
-          * The last message
-          * The time of the last message
-          * A missing messages indicator
-      2) Observe if a new group chat is added due to an addition by a friend
-      3) Observe if a message was received from a group chat
-      4) User can create a group
+### Login
 
-  - Group chat
-      1) Chat messages is loaded (pagination is applied)
-      2) Observe for new message to receive by users in the group
-      3) Send message to the group chat
-      4) User can leave the group (a confirmation dialog appears)
-      5) User can add his friends
-      
-  - Friendship management
-      1) User can send a friend request by writing the username of a person he wishes to be a friend and a message
-          * If the user sends the friend request to himself an error message appears
-          * If the user sends the friend request to someone he already friend with, and error message appears
-      2) Friend friend requests are loaded
-      3) User can accept or reject the friend requests
+1. User enters username and password:
+   - If correct, it authenticates; otherwise, an error message is shown.
+2. User can sign up if no account is already registered.
+3. User credentials are saved if the login succeeds.
 
-  - Notifications
-      1) A message received from a private chat or a group chat
-      2) User accepts the friend request
-      3) User sends a friend request
-      4) User added to a group
+### Sign Up
+
+1. User enters nickname, username, password, and confirms the password.
+2. Error message appears if the password fields do not match.
+3. User can log in if they already have an account.
+
+### Friendship Hub (Chats of Friends)
+
+1. Friends' chats are loaded with:
+   - The last message
+   - The time of the last message
+   - A missing messages indicator
+2. Observes new chats added due to friend request acceptance.
+3. Observes messages received from friends.
+4. Removes chat if a friend removes the user.
+5. User can log out.
+
+### Friendship Chat
+
+1. Chat messages are loaded.
+2. Observes for new messages received.
+3. User can send messages to friends.
+4. User can remove friends, with a confirmation dialog, and automatic navigation up.
+
+### Group Hub (Chats of Joined Groups)
+
+1. Groups' chats are loaded with:
+   - The last message
+   - The time of the last message
+   - A missing messages indicator
+2. Observes new group chats added by friends.
+3. Observes messages received from group chats.
+4. User can create groups.
+
+### Group Chat
+
+1. Chat messages are loaded (pagination is applied).
+2. Observes for new messages received by group users.
+3. User can send messages to group chats.
+4. User can leave groups with a confirmation dialog.
+5. User can add friends to groups.
+
+### Friendship Management
+
+1. User can send friend requests by writing the username and a message:
+   - Error message if the user sends the request to themselves.
+   - Error message if the user sends the request to someone already a friend.
+2. Friend requests are loaded.
+3. User can accept or reject friend requests.
+
+### Notifications
+
+1. Message received from private or group chats.
+2. User accepts a friend request.
+3. User sends a friend request.
+4. User added to a group.
