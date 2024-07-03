@@ -12,6 +12,7 @@ This project is an Android-Spring Boot chat application that provides authentica
 - **Clean Architecture (MVVM, UseCase, Repository)**
 - **Real-time Communication (Simple Text Oriented Messaging Protocol)**
 - **REST API (Retrofit)**
+- **STOMP (Simple Text Oriented Messaging Protocol)**
 - **Dependency Injection (Dagger Hilt)**
 - **Firebase Cloud Messaging**
 - **Pagination**
